@@ -73,6 +73,8 @@ void Error_Handler(void);
 #define w4_GPIO_Port GPIOF
 #define k4_Pin GPIO_PIN_3
 #define k4_GPIO_Port GPIOF
+#define LED1_Pin GPIO_PIN_6
+#define LED1_GPIO_Port GPIOF
 #define Relay_Pin GPIO_PIN_1
 #define Relay_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
