@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 "zamek\startup_stm32f103xe.o"
+"zamek\lcd.o"
 "zamek\main.o"
 "zamek\freertos.o"
 "zamek\stm32f1xx_it.o"
@@ -33,6 +34,6 @@
 "zamek\heap_4.o"
 "zamek\port.o"
 --strict --scatter "zamek\zamek.sct"
---summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "zamek.map" -o zamek\zamek.axf

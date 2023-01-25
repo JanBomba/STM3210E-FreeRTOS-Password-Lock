@@ -3,101 +3,62 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: µVision V5.15
-Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: a a, a, LIC=----
+IDE-Version: µVision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Pawel Lempa, Politechnika Slaska, LIC=----
  
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.15.0
-Toolchain Path:  C:\Keil_arm_v5\ARM\ARMCC\Bin
-C Compiler:      Armcc.exe V5.05 update 2 (build 169)
-Assembler:       Armasm.exe V5.05 update 2 (build 169)
-Linker/Locator:  ArmLink.exe V5.05 update 2 (build 169)
-Library Manager: ArmAr.exe V5.05 update 2 (build 169)
-Hex Converter:   FromElf.exe V5.05 update 2 (build 169)
-CPU DLL:         SARMCM3.DLL V5.15.0
-Dialog DLL:      DCM.DLL V1.13.2.0
-Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.15.0_KEIL
-Dialog DLL:      TCM.DLL V1.14.5.0
+Toolchain:       MDK-Lite  Version: 5.38.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.38.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.1.0.0
+Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
-D:\SW\Projekt\zamek\STM3210E-FreeRTOS-Password-Lock\MDK-ARM\zamek.uvprojx
-Project File Date:  01/10/2023
+C:\Users\HP\Documents\GitHub\STM3210E-FreeRTOS-Password-Lock\MDK-ARM\zamek.uvprojx
+Project File Date:  01/24/2023
 
 <h2>Output:</h2>
-*** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_arm_v5\ARM\ARMCC\Bin'
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'zamek'
 compiling main.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Core/Src/main.c: 0 warnings, 1 error
-compiling freertos.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Core/Src/freertos.c: 0 warnings, 1 error
-compiling stm32f1xx_it.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Core/Src/stm32f1xx_it.c: 0 warnings, 1 error
-compiling croutine.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/croutine.c: 0 warnings, 1 error
-compiling event_groups.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c: 0 warnings, 1 error
-compiling list.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/list.c: 0 warnings, 1 error
-compiling queue.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/queue.c: 0 warnings, 1 error
-compiling stream_buffer.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c: 0 warnings, 1 error
-compiling tasks.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/tasks.c: 0 warnings, 1 error
-compiling timers.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/timers.c: 0 warnings, 1 error
-compiling cmsis_os.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c: 0 warnings, 1 error
-compiling heap_4.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c: 0 warnings, 1 error
-compiling port.c...
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(244): error:  #35: #error directive: If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-                #error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
-../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c: 0 warnings, 1 error
-"zamek\zamek.axf" - 13 Error(s), 0 Warning(s).
+../Core/Src/main.c(255): warning:  #181-D: argument is incompatible with corresponding format string conversion
+  		snprintf((char *)n_display, DisplayWidth, "   %lf   ", n);
+../Core/Src/main.c: 1 warning, 0 errors
+linking...
+Program Size: Code=15084 RO-data=5260 RW-data=148 ZI-data=5636  
+FromELF: creating hex file...
+"zamek\zamek.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
-                http://www.keil.com/pack/ARM.CMSIS.5.6.0.pack
-                ARM::CMSIS:CORE:5.3.0
-                CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: CORE Version: 5.3.0
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM.CMSIS.5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.0.pack
+                Keil.STM32F1xx_DFP.2.4.0
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
 
 <h2>Collection of Component include folders:</h2>
-  D:\SW\Projekt\zamek\STM3210E-FreeRTOS-Password-Lock\MDK-ARM\RTE
-  C:\Keil_arm_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Core\Include
-  C:\Keil_arm_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include
+  ./RTE/_zamek
+  C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+  C:/Users/HP/AppData/Local/Arm/Packs/Keil/STM32F1xx_DFP/2.4.0/Device/Include
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: ARM::CMSIS:CORE:5.3.0
-Target not created.
+   * Component: ARM::CMSIS:CORE:5.6.0
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

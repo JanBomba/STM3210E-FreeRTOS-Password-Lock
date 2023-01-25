@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "timers.h"
+#include "lcd.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +34,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define dBounceTime 10
+#define DisplayWidth 20
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -46,7 +50,10 @@ SRAM_HandleTypeDef hsram3;
 
 osThreadId defaultTaskHandle;
 osThreadId klawiatura_deboHandle;
-osMessageQId klawiszHandle;
+osThreadId wyswietlaczHandle;
+osMessageQId znakHandle;
+osMessageQId symbolHandle;
+osMessageQId nHandle;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -58,13 +65,204 @@ static void MX_DAC_Init(void);
 static void MX_FSMC_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
+void StartTask03(void const * argument);
 
 /* USER CODE BEGIN PFP */
-static void klawiatura_debo(void *pvParameters);
-static void klawiatura_debo(void *pvParameters)
+static void klawiatura_debo(void);
+static void klawiatura_debo()
 {
+uint8_t znak; // czy na pewno moze byc jak go wykorzystujemy jako cyfra 0
+uint8_t symbol;
+uint8_t klawisz_0;
+uint8_t klawisz_1;
+uint8_t klawisz_2;
+uint8_t klawisz_3;
+uint8_t klawisz_4;
+uint8_t klawisz_5;
+uint8_t klawisz_6;
+uint8_t klawisz_7;
+uint8_t klawisz_8;
+uint8_t klawisz_9;
+uint8_t klawisz_UP;
+uint8_t klawisz_DOWN;
+uint8_t klawisz_ENTER;
+uint8_t klawisz_SERWIS;
+uint8_t n;
+
+//klawiatura
+		if(n==4) n=1;
+		for(int i=1;i<5;i++)
+	{
+		switch (i)
+		{
+case 1: 	//wiersz 1 R1(W1)
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
+				
+			////////////////////////////   0   ////////////////////////////
+			switch (klawisz_0)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_0++; GPIOF->ODR =(klawisz_0<<6); break;
+				case 1: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_0++; else klawisz_0=0;GPIOF->ODR =(klawisz_0<<6) ;break;
+				case 2: znak=0; n++; klawisz_0++; GPIOF->ODR =(klawisz_0<<6);
+				case 3: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_0++; GPIOF->ODR =(klawisz_0<<6); break;
+				case 4: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_0=0; else klawisz_0=3; GPIOF->ODR =(klawisz_0<<6); break;
+			}
+			////////////////////////////   SERWIS   ////////////////////////////
+			switch (klawisz_SERWIS)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_SERWIS++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_SERWIS++; else klawisz_SERWIS=0; break;
+				case 2: symbol=1; klawisz_SERWIS++;
+				case 3: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_SERWIS++; break;
+				case 4: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_SERWIS=0; else klawisz_SERWIS=3; break;
+			}
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_SET);
+			break;
+case 2:		//wiersz 2 R2(W2)
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_RESET);
+			////////////////////////////   1   ////////////////////////////
+			switch (klawisz_1)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_1++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_1++; else klawisz_1=0; break;
+				case 2: znak=1; n++; klawisz_1++;
+				case 3: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_1++; break;
+				case 4: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_1=0; else klawisz_1=3; break;
+			}
+			////////////////////////////   2   ////////////////////////////
+			switch (klawisz_2)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_2++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_2++; else klawisz_2=0; break;
+				case 2: znak=2; n++; klawisz_2++;
+				case 3: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_2++; break;
+				case 4: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_2=0; else klawisz_2=3; break;
+			}
+			////////////////////////////   3   ////////////////////////////
+			switch (klawisz_3)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_3++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_3++; else klawisz_3=0; break;
+				case 2: znak=3; n++; klawisz_3++;
+				case 3: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_3++; break;
+				case 4: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_3=0; else klawisz_3=3; break;
+			}
+			////////////////////////////   ENTER   ////////////////////////////
+			switch (klawisz_ENTER)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_ENTER++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_ENTER++; else klawisz_ENTER=0; break;
+				case 2: symbol=2; klawisz_ENTER++;
+				case 3: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_ENTER++; break;
+				case 4: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_ENTER=0; else klawisz_ENTER=3; break;
+			}
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_SET);
+			break;
+case 3:		//wiersz 3 R3(W3)
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_RESET);
+			////////////////////////////   4   ////////////////////////////
+			switch (klawisz_4)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_4++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_4++; else klawisz_4=0; break;
+				case 2: znak=4; n++; klawisz_4++;
+				case 3: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_4++; break;
+				case 4: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_4=0; else klawisz_4=3; break;
+			}
+			////////////////////////////   5   ////////////////////////////
+			switch (klawisz_5)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_5++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_5++; else klawisz_5=0; break;
+				case 2: znak=5; n++; klawisz_5++;
+				case 3: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_5++; break;
+				case 4: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_5=0; else klawisz_5=3; break;
+			}
+			////////////////////////////   6   ////////////////////////////
+			switch (klawisz_6)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_6++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_6++; else klawisz_6=0; break;
+				case 2: znak=6; n++; klawisz_6++;
+				case 3: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_6++; break;
+				case 4: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_6=0; else klawisz_6=3; break;
+			}
+			////////////////////////////   DOWN   ////////////////////////////
+			switch (klawisz_DOWN)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_DOWN++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_DOWN++; else klawisz_DOWN=0; break;
+				case 2: symbol=3; klawisz_DOWN++;
+				case 3: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_DOWN++; break;
+				case 4: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_DOWN=0; else klawisz_DOWN=3; break;
+			}
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
+			break;
+case 4:		//wiersz 4 R4(W4)
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_RESET);
+			////////////////////////////   7   ////////////////////////////
+			switch (klawisz_7)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_7++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_7++; else klawisz_7=0; break;
+				case 2: symbol=7; klawisz_7++;
+				case 3: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_7++; break;
+				case 4: if(HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) klawisz_7=0; else klawisz_7=3; break;
+			}
+			////////////////////////////   8   ////////////////////////////
+			switch (klawisz_8)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_8++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_8++; else klawisz_8=0; break;
+				case 2: znak=8; n++; klawisz_8++;
+				case 3: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_8++; break;
+				case 4: if(HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) klawisz_8=0; else klawisz_8=3; break;
+			}
+			////////////////////////////   9   ////////////////////////////
+			switch (klawisz_9)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_9++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_9++; else klawisz_9=0; break;
+				case 2: znak=9; klawisz_9++;
+				case 3: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_9++; break;
+				case 4: if(HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) klawisz_9=0; else klawisz_9=3; break;
+			}
+			////////////////////////////   UP   ////////////////////////////
+			switch (klawisz_UP)
+			{
+				case 0: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_UP++; break;
+				case 1: if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_UP++; else klawisz_UP=0; break;
+				case 2: symbol=4; klawisz_UP++;
+				case 3: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_UP++; break;
+				case 4: if(HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) klawisz_UP=0; else klawisz_UP=3; break;
+			}
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
+			break;
+		}
+	}
+	xQueueSend(znakHandle,&znak,0);
+	xQueueSend(symbolHandle,&symbol,0);
+	xQueueSend(nHandle,&n,0);
+
 	
-}
+	uint8_t n_display [DisplayWidth];
+	uint8_t symbol_display [DisplayWidth];
+	uint8_t znak_display [DisplayWidth];
+		
+		LCD_SetBackColor(Black);
+		LCD_SetTextColor(Green);
+				
+		snprintf((char *)n_display, DisplayWidth, "   %d   ", n);
+		LCD_DisplayStringLine(Line2, n_display);
+		
+		snprintf((char *)symbol_display, DisplayWidth, "   %d   ", symbol);
+		LCD_DisplayStringLine(Line4, symbol_display);
+		
+		snprintf((char *)znak_display, DisplayWidth, "   %d   ", znak);
+		LCD_DisplayStringLine(Line6, znak_display);
+		
+		vTaskDelay(dBounceTime/portTICK_PERIOD_MS);
+	}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -103,7 +301,7 @@ int main(void)
   MX_DAC_Init();
   MX_FSMC_Init();
   /* USER CODE BEGIN 2 */
-
+STM3210E_LCD_Init();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -120,9 +318,17 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
-  /* definition and creation of klawisz */
-  osMessageQDef(klawisz, 1, uint8_t);
-  klawiszHandle = osMessageCreate(osMessageQ(klawisz), NULL);
+  /* definition and creation of znak */
+  osMessageQDef(znak, 1, uint8_t);
+  znakHandle = osMessageCreate(osMessageQ(znak), NULL);
+
+  /* definition and creation of symbol */
+  osMessageQDef(symbol, 1, uint8_t);
+  symbolHandle = osMessageCreate(osMessageQ(symbol), NULL);
+
+  /* definition and creation of n */
+  osMessageQDef(n, 1, uint8_t);
+  nHandle = osMessageCreate(osMessageQ(n), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -136,6 +342,10 @@ int main(void)
   /* definition and creation of klawiatura_debo */
   osThreadDef(klawiatura_debo, StartTask02, osPriorityHigh, 0, 128);
   klawiatura_deboHandle = osThreadCreate(osThread(klawiatura_debo), NULL);
+
+  /* definition and creation of wyswietlacz */
+  osThreadDef(wyswietlacz, StartTask03, osPriorityHigh, 0, 128);
+  wyswietlaczHandle = osThreadCreate(osThread(wyswietlacz), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -252,7 +462,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, w1_Pin|w2_Pin|w3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, w4_Pin|LED1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, w4_Pin|LED1_Pin|LED2_Pin|LED3_Pin
+                          |LED4_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Relay_GPIO_Port, Relay_Pin, GPIO_PIN_RESET);
@@ -283,12 +494,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(w4_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED1_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Relay_Pin */
   GPIO_InitStruct.Pin = Relay_Pin;
@@ -391,9 +602,52 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		klawiatura_debo();
     osDelay(1);
   }
   /* USER CODE END StartTask02 */
+}
+
+/* USER CODE BEGIN Header_StartTask03 */
+/**
+* @brief Function implementing the wyswietlacz thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask03 */
+void StartTask03(void const * argument)
+{
+  /* USER CODE BEGIN StartTask03 */
+//	uint8_t n_display [DisplayWidth];
+//	uint8_t symbol_display [DisplayWidth];
+//	uint8_t znak_display [DisplayWidth];
+//	
+//	uint8_t n_queue;
+//	uint8_t symbol_queue;
+//	uint8_t znak_queue;
+//  /* Infinite loop */
+  for(;;)
+  {
+//		
+//	xQueueReceive(nHandle,&n_queue,0);
+//	xQueueReceive(znakHandle,&znak_queue,0);	
+//	xQueueReceive(symbolHandle,&symbol_queue,0);	
+//		
+//		LCD_SetBackColor(Black);
+//		LCD_SetTextColor(Green);
+//				
+//		snprintf((char *)n_display, DisplayWidth, "   %d   ", n_queue);
+//		LCD_DisplayStringLine(Line2, n_display);
+//		
+//		snprintf((char *)symbol_display, DisplayWidth, "   %d   ", symbol_queue);
+//		LCD_DisplayStringLine(Line4, symbol_display);
+//		
+//		snprintf((char *)znak_display, DisplayWidth, "   %d   ", znak_queue);
+//		LCD_DisplayStringLine(Line6, znak_display);
+//		
+    osDelay(1);
+  }
+  /* USER CODE END StartTask03 */
 }
 
 /**
