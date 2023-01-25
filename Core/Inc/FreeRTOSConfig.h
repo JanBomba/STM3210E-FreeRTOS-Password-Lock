@@ -72,7 +72,7 @@
 #define configUSE_COUNTING_SEMAPHORES            1
 #define configENABLE_BACKWARD_COMPATIBILITY      0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION  1
-#define configUSE_TASK_NOTIFICATIONS             1
+#define configUSE_TASK_NOTIFICATIONS             0
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES                    0
