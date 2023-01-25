@@ -24,6 +24,8 @@
 #include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lcd.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +45,25 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern uint8_t znak;
+extern uint8_t symbol;
+extern uint8_t klawisz_0;
+extern uint8_t klawisz_1;
+extern uint8_t klawisz_2;
+extern uint8_t klawisz_3;
+extern uint8_t klawisz_4;
+extern uint8_t klawisz_5;
+extern uint8_t klawisz_6;
+extern uint8_t klawisz_7;
+extern uint8_t klawisz_8;
+extern uint8_t klawisz_9;
+extern uint8_t klawisz_G;
+extern uint8_t klawisz_K;
+extern uint8_t klawisz_A;
+extern uint8_t klawisz_B;
+extern uint8_t klawisz_C;
+extern uint8_t klawisz_D;
+extern uint8_t n;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,7 +77,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern TIM_HandleTypeDef htim6;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -181,6 +201,78 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f1xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles TIM6 global interrupt.
+  */
+void TIM6_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_IRQn 0 */
+  /* USER CODE END TIM6_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_IRQn 1 */
+	HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
+	if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) GPIOF->ODR ^= (1<<6);
+	HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_RESET);
+	if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin) || !HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin) || !HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin) || !HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin))
+	{
+		n++;
+		if(n==2)
+		{
+			for(uint8_t i=0; i<4; i++) {
+			switch(i) {
+				case 0:
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
+				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) znak=1;
+				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) znak=2;
+				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) znak=3;
+				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) znak=4;
+				break;
+				case 1:
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
+				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) znak=5;
+				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) znak=6;
+				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) znak=7;
+				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) znak=8;
+				break;
+				case 2:
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
+				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) znak=9;
+				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) znak=10;
+				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) znak=11;
+				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) znak=12;
+				break;
+				case 3:
+				HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_RESET);
+				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) znak=13;
+				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)) znak=14;
+				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)) znak=15;
+				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)) znak=16;
+				break;
+			}
+
+		}
+			n=0;
+	}
+}
+
+  /* USER CODE END TIM6_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 
