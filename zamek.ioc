@@ -1,7 +1,11 @@
 #MicroXplorer Configuration settings - do not modify
+CAD.formats=
+CAD.pinconfig=
+CAD.provider=
+FREERTOS.BinarySemaphores01=znak_licznik,Dynamic,NULL
 FREERTOS.FootprintOK=true
-FREERTOS.IPParameters=Tasks01,configUSE_COUNTING_SEMAPHORES,configUSE_PREEMPTION,configIDLE_SHOULD_YIELD,configENABLE_BACKWARD_COMPATIBILITY,configUSE_TASK_NOTIFICATIONS,FootprintOK,configUSE_TIMERS,configTIMER_TASK_PRIORITY
-FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;klawiatura_debo,2,128,StartTask02,Default,NULL,Dynamic,NULL,NULL;wyswietlacz,2,128,StartTask03,Default,NULL,Dynamic,NULL,NULL
+FREERTOS.IPParameters=Tasks01,configUSE_COUNTING_SEMAPHORES,configUSE_PREEMPTION,configIDLE_SHOULD_YIELD,configENABLE_BACKWARD_COMPATIBILITY,configUSE_TASK_NOTIFICATIONS,FootprintOK,configUSE_TIMERS,configTIMER_TASK_PRIORITY,BinarySemaphores01
+FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;wyswietlanie,2,128,StartTask02,Default,NULL,Dynamic,NULL,NULL
 FREERTOS.configENABLE_BACKWARD_COMPATIBILITY=0
 FREERTOS.configIDLE_SHOULD_YIELD=0
 FREERTOS.configTIMER_TASK_PRIORITY=1
@@ -206,7 +210,7 @@ ProjectManager.StackSize=0x400
 ProjectManager.TargetToolchain=MDK-ARM V5.32
 ProjectManager.ToolChainLocation=
 ProjectManager.UnderRoot=false
-ProjectManager.functionlistsort=1-SystemClock_Config-RCC-false-HAL-false,2-MX_GPIO_Init-GPIO-false-HAL-true,3-MX_DAC_Init-DAC-false-HAL-true,4-MX_FSMC_Init-FSMC-false-HAL-true
+ProjectManager.functionlistsort=1-SystemClock_Config-RCC-false-HAL-false,2-MX_GPIO_Init-GPIO-false-HAL-true,3-MX_DAC_Init-DAC-false-HAL-true,4-MX_FSMC_Init-FSMC-false-HAL-true,5-MX_TIM6_Init-TIM6-false-HAL-true
 RCC.APB1Freq_Value=8000000
 RCC.APB2Freq_Value=8000000
 RCC.FamilyName=M

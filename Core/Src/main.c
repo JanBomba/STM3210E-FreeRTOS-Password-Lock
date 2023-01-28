@@ -25,7 +25,6 @@
 #include "timers.h"
 #include "lcd.h"
 #include "stdio.h"
-#include "keypad.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,8 +51,8 @@ TIM_HandleTypeDef htim6;
 SRAM_HandleTypeDef hsram3;
 
 osThreadId defaultTaskHandle;
-osThreadId klawiatura_deboHandle;
-osThreadId wyswietlaczHandle;
+osThreadId wyswietlanieHandle;
+volatile osSemaphoreId znak_licznikHandle;
 /* USER CODE BEGIN PV */
 volatile uint8_t znak=0;
 volatile uint8_t symbol=99;
@@ -84,7 +83,6 @@ static void MX_FSMC_Init(void);
 static void MX_TIM6_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
-void StartTask03(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -137,6 +135,11 @@ STM3210E_LCD_Init();
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* definition and creation of znak_licznik */
+  osSemaphoreDef(znak_licznik);
+  znak_licznikHandle = osSemaphoreCreate(osSemaphore(znak_licznik), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -154,13 +157,9 @@ STM3210E_LCD_Init();
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of klawiatura_debo */
-  osThreadDef(klawiatura_debo, StartTask02, osPriorityHigh, 0, 128);
-  klawiatura_deboHandle = osThreadCreate(osThread(klawiatura_debo), NULL);
-
-  /* definition and creation of wyswietlacz */
-  osThreadDef(wyswietlacz, StartTask03, osPriorityHigh, 0, 128);
-  wyswietlaczHandle = osThreadCreate(osThread(wyswietlacz), NULL);
+  /* definition and creation of wyswietlanie */
+  osThreadDef(wyswietlanie, StartTask02, osPriorityHigh, 0, 128);
+  wyswietlanieHandle = osThreadCreate(osThread(wyswietlanie), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -452,37 +451,42 @@ void StartDefaultTask(void const * argument)
 void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
+	LCD_Clear(Black);
+	uint8_t i=0;
+	uint8_t i_disp[20];
+	uint8_t n_disp[20];
 	uint8_t symbol_disp [20];
+	uint8_t pin_disp [20] = "PIN: ";
+	LCD_DisplayStringLine(Line5, pin_disp);
 //	uint8_t znak_disp [20];
 //	uint8_t n_disp [20];
 //  /* Infinite loop */
 for(;;)
 {
 	sprintf( (char *)symbol_disp, "znak: %d ", znak);
-	LCD_DisplayStringLine(Line3, symbol_disp);
+	LCD_DisplayStringLine(Line1, symbol_disp);
+	sprintf( (char *)n_disp, "n: %d ", n);
+	LCD_DisplayStringLine(Line3, n_disp);
+	if( znak_licznikHandle != NULL )
+    {
+			if( xSemaphoreTake( znak_licznikHandle, NULL ) == pdTRUE )
+        {
+					GPIOF->ODR ^= (1<<6);
+					if(i==5) {
+						LCD_ClearLine(Line5);
+						LCD_DisplayStringLine(Line5, pin_disp);
+						i=0;
+					}
+					if(i!=0)
+					LCD_DisplayChar(Line5, 250-20*i, '*');
+					i++;
+					sprintf( (char *)i_disp, "i: %d ", i);
+					LCD_DisplayStringLine(Line2, i_disp);
+				}
+		}
     osDelay(1);
   }
   /* USER CODE END StartTask02 */
-}
-
-/* USER CODE BEGIN Header_StartTask03 */
-/**
-* @brief Function implementing the wyswietlacz thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask03 */
-void StartTask03(void const * argument)
-{
-  /* USER CODE BEGIN StartTask03 */
-
-//  /* Infinite loop */
-  for(;;)
-  {
-
-    osDelay(1);
-  }
-  /* USER CODE END StartTask03 */
 }
 
 /**
