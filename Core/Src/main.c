@@ -52,8 +52,19 @@ SRAM_HandleTypeDef hsram3;
 
 osThreadId defaultTaskHandle;
 osThreadId wyswietlanieHandle;
-volatile osSemaphoreId znak_licznikHandle;
+osThreadId zarzadcaHandle;
+osThreadId pamiecHandle;
+osMessageQId PIN_znakHandle;
+osSemaphoreId znak_licznikHandle;
+osSemaphoreId PIN_completedHandle;
+osSemaphoreId EnterHandle;
+osSemaphoreId DOWNHandle;
+osSemaphoreId UPHandle;
+osSemaphoreId SERWISHandle;
+osSemaphoreId PIN_tooShortHandle;
+osSemaphoreId alarmHandle;
 /* USER CODE BEGIN PV */
+osMessageQId PINHandle;
 volatile uint8_t znak=0;
 volatile uint8_t symbol=99;
 volatile uint8_t klawisz_0=0;
@@ -83,9 +94,18 @@ static void MX_FSMC_Init(void);
 static void MX_TIM6_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
+void StartTask03(void const * argument);
+void StartTask04(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+void Def_LCD (void);
+void Def_LCD () {
+	uint8_t pin_disp [20] = "PIN: ";
+	LCD_Clear(Black);
+	LCD_SetBackColor(Black);
+	LCD_SetTextColor(Green);
+	LCD_DisplayStringLine(Line5, pin_disp);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -124,7 +144,7 @@ int main(void)
   MX_FSMC_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-STM3210E_LCD_Init();
+	STM3210E_LCD_Init();
 	LCD_SetBackColor(Black);
 	LCD_SetTextColor(Green);
 	HAL_TIM_Base_Start_IT(&htim6);
@@ -140,6 +160,34 @@ STM3210E_LCD_Init();
   osSemaphoreDef(znak_licznik);
   znak_licznikHandle = osSemaphoreCreate(osSemaphore(znak_licznik), 1);
 
+  /* definition and creation of PIN_completed */
+  osSemaphoreDef(PIN_completed);
+  PIN_completedHandle = osSemaphoreCreate(osSemaphore(PIN_completed), 1);
+
+  /* definition and creation of Enter */
+  osSemaphoreDef(Enter);
+  EnterHandle = osSemaphoreCreate(osSemaphore(Enter), 1);
+
+  /* definition and creation of DOWN */
+  osSemaphoreDef(DOWN);
+  DOWNHandle = osSemaphoreCreate(osSemaphore(DOWN), 1);
+
+  /* definition and creation of UP */
+  osSemaphoreDef(UP);
+  UPHandle = osSemaphoreCreate(osSemaphore(UP), 1);
+
+  /* definition and creation of SERWIS */
+  osSemaphoreDef(SERWIS);
+  SERWISHandle = osSemaphoreCreate(osSemaphore(SERWIS), 1);
+
+  /* definition and creation of PIN_tooShort */
+  osSemaphoreDef(PIN_tooShort);
+  PIN_tooShortHandle = osSemaphoreCreate(osSemaphore(PIN_tooShort), 1);
+
+  /* definition and creation of alarm */
+  osSemaphoreDef(alarm);
+  alarmHandle = osSemaphoreCreate(osSemaphore(alarm), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -148,8 +196,19 @@ STM3210E_LCD_Init();
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* definition and creation of PIN_znak */
+  osMessageQDef(PIN_znak, 1, uint8_t);
+  PIN_znakHandle = osMessageCreate(osMessageQ(PIN_znak), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+	xSemaphoreTake(EnterHandle, NULL);
+	xSemaphoreTake(PIN_tooShortHandle, NULL);
+	xSemaphoreTake(alarmHandle, NULL);
+	
+	osMessageQDef(PIN, 2, 4*sizeof(uint8_t));
+	PINHandle = osMessageCreate(osMessageQ(PIN), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -160,6 +219,14 @@ STM3210E_LCD_Init();
   /* definition and creation of wyswietlanie */
   osThreadDef(wyswietlanie, StartTask02, osPriorityHigh, 0, 128);
   wyswietlanieHandle = osThreadCreate(osThread(wyswietlanie), NULL);
+
+  /* definition and creation of zarzadca */
+  osThreadDef(zarzadca, StartTask03, osPriorityIdle, 0, 128);
+  zarzadcaHandle = osThreadCreate(osThread(zarzadca), NULL);
+
+  /* definition and creation of pamiec */
+  osThreadDef(pamiec, StartTask04, osPriorityIdle, 0, 128);
+  pamiecHandle = osThreadCreate(osThread(pamiec), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -395,12 +462,12 @@ static void MX_FSMC_Init(void)
   hsram3.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
   hsram3.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   /* Timing */
-  Timing.AddressSetupTime = 15;
-  Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 255;
-  Timing.BusTurnAroundDuration = 15;
-  Timing.CLKDivision = 16;
-  Timing.DataLatency = 17;
+  Timing.AddressSetupTime = 0;
+  Timing.AddressHoldTime = 0;
+  Timing.DataSetupTime = 2;
+  Timing.BusTurnAroundDuration = 0;
+  Timing.CLKDivision = 0;
+  Timing.DataLatency = 0;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 
@@ -451,13 +518,13 @@ void StartDefaultTask(void const * argument)
 void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
-	LCD_Clear(Black);
 	uint8_t i=0;
 	uint8_t i_disp[20];
-	uint8_t n_disp[20];
+	uint8_t PIN_disp[20];
 	uint8_t symbol_disp [20];
+	uint8_t PIN[4];
 	uint8_t pin_disp [20] = "PIN: ";
-	LCD_DisplayStringLine(Line5, pin_disp);
+	Def_LCD();
 //	uint8_t znak_disp [20];
 //	uint8_t n_disp [20];
 //  /* Infinite loop */
@@ -465,28 +532,174 @@ for(;;)
 {
 	sprintf( (char *)symbol_disp, "znak: %d ", znak);
 	LCD_DisplayStringLine(Line1, symbol_disp);
-	sprintf( (char *)n_disp, "n: %d ", n);
-	LCD_DisplayStringLine(Line3, n_disp);
 	if( znak_licznikHandle != NULL )
     {
 			if( xSemaphoreTake( znak_licznikHandle, NULL ) == pdTRUE )
         {
-					GPIOF->ODR ^= (1<<6);
-					if(i==5) {
-						LCD_ClearLine(Line5);
-						LCD_DisplayStringLine(Line5, pin_disp);
-						i=0;
-					}
-					if(i!=0)
-					LCD_DisplayChar(Line5, 250-20*i, '*');
+					//GPIOF->ODR ^= (1<<6);
+					if (i==5)	xSemaphoreTake(PIN_completedHandle, NULL);
+					if(i!=0 && i<5)	LCD_DisplayChar(Line5, 250-20*i, '*');
+					xQueueReceive(PIN_znakHandle, &PIN[i-1], NULL);
 					i++;
 					sprintf( (char *)i_disp, "i: %d ", i);
 					LCD_DisplayStringLine(Line2, i_disp);
+					}
 				}
-		}
+		if( EnterHandle != NULL )
+							{
+								if( xSemaphoreTake( EnterHandle, NULL ) == pdTRUE )
+									{
+										if(i>=5) {
+										LCD_ClearLine(Line5);
+										LCD_DisplayStringLine(Line5, pin_disp);
+										sprintf( (char*)PIN_disp,"PIN: %d %d %d %d", PIN[0], PIN[1], PIN[2], PIN[3]);
+										LCD_DisplayStringLine(Line3, PIN_disp);
+										xSemaphoreGive(PIN_completedHandle);
+										xQueueSend(PINHandle, PIN, NULL);
+										i=1;
+										xSemaphoreGive(PIN_tooShortHandle);
+											}
+										else {
+										LCD_ClearLine(Line5);
+										LCD_DisplayStringLine(Line5, pin_disp);
+										xSemaphoreTake(PIN_tooShortHandle, NULL);
+										i=1;
+										}
+									}
+								}
     osDelay(1);
   }
   /* USER CODE END StartTask02 */
+}
+
+/* USER CODE BEGIN Header_StartTask03 */
+/**
+* @brief Function implementing the zarzadca thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask03 */
+void StartTask03(void const * argument)
+{
+  /* USER CODE BEGIN StartTask03 */
+	uint8_t PIN_mem[4] = {0, 1, 2, 3};
+	uint8_t PIN_read[4];
+	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
+	uint8_t PIN_correct2[20] = "                    ";
+	uint8_t PIN_correct3[20] = "               /    ";
+	uint8_t PIN_correct4[20] = "              /     ";
+	uint8_t PIN_correct5[20] = "             /      ";
+	uint8_t PIN_correct6[20] = "         \\  /       ";
+	uint8_t PIN_correct7[20] = "          \\/        ";
+	uint8_t correct=0;
+	uint8_t kolejka_disp[20];
+	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
+	uint8_t PIN_wrong2[20] = "                    ";
+	uint8_t PIN_wrong3[20] = "       \\    /       ";
+	uint8_t PIN_wrong4[20] = "        \\  /        ";
+	uint8_t PIN_wrong5[20] = "         \\/         ";
+	uint8_t PIN_wrong6[20] = "         /\\         ";
+	uint8_t PIN_wrong7[20] = "        /  \\        ";
+	uint8_t PIN_wrong8[20] = "       /    \\       ";
+	uint8_t alarm_cnt=0;
+	uint8_t alarm_cnt_disp[20];
+	uint8_t alarm_disp[20] = "    ALARM!!!!!!     ";
+	uint8_t alarm_disp_cnt =0;
+  /* Infinite loop */
+  for(;;)
+  {
+		if( alarmHandle != NULL )
+						{
+							if( xSemaphoreTake( alarmHandle, NULL ) == pdTRUE ){
+								vTaskSuspend(wyswietlanieHandle);
+								if(!(alarm_disp_cnt&1)){
+									LCD_Clear(Black);
+									LCD_SetBackColor(Black);
+									LCD_SetTextColor(Red);
+									LCD_DisplayStringLine(Line5, alarm_disp);
+								}
+								else {
+									LCD_Clear(Red);
+									LCD_SetBackColor(Red);
+									LCD_SetTextColor(White);
+									LCD_DisplayStringLine(Line5, alarm_disp);
+								}
+								alarm_disp_cnt++;
+								vTaskDelay(500);
+								xSemaphoreGive(alarmHandle);
+							}
+							else if( PIN_tooShortHandle != NULL )
+							{
+								if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
+									xQueueReceive(PINHandle, PIN_read, 0);
+									sprintf( (char *) kolejka_disp, "kolejka: %d %d %d %d", PIN_read[0], PIN_read[1], PIN_read[2], PIN_read[3]);
+									LCD_DisplayStringLine(Line9, kolejka_disp);
+									for(uint8_t i=0; i<4; i++)
+										if(PIN_mem[i] == PIN_read[i]) correct++;
+									if(correct == 4){
+										LCD_Clear(Green);
+										LCD_SetBackColor(Green);
+										LCD_SetTextColor(White);
+										LCD_DisplayStringLine(Line1, PIN_correct1);
+										LCD_DisplayStringLine(Line2, PIN_correct2);
+										LCD_DisplayStringLine(Line3, PIN_correct3);
+										LCD_DisplayStringLine(Line4, PIN_correct4);
+										LCD_DisplayStringLine(Line5, PIN_correct5);
+										LCD_DisplayStringLine(Line6, PIN_correct6);
+										LCD_DisplayStringLine(Line7, PIN_correct7);
+										correct=0;
+										HAL_Delay(3000);
+										Def_LCD();
+								}
+									else{
+										LCD_Clear(Red);
+										LCD_SetBackColor(Red);
+										LCD_SetTextColor(White);
+										LCD_DisplayStringLine(Line1, PIN_wrong1);
+										LCD_DisplayStringLine(Line2, PIN_wrong2);
+										LCD_DisplayStringLine(Line3, PIN_wrong3);
+										LCD_DisplayStringLine(Line4, PIN_wrong4);
+										LCD_DisplayStringLine(Line5, PIN_wrong5);
+										LCD_DisplayStringLine(Line6, PIN_wrong6);
+										LCD_DisplayStringLine(Line7, PIN_wrong7);
+										LCD_DisplayStringLine(Line8, PIN_wrong8);
+										correct=0;
+										alarm_cnt++;
+										if(alarm_cnt == 3){
+											xSemaphoreGive(alarmHandle);
+											alarm_cnt=0;
+										}else {
+										sprintf(( char*) alarm_cnt_disp, "Pozostalo prob: %d", 3-alarm_cnt);
+										LCD_DisplayStringLine(Line9, alarm_cnt_disp);
+										}
+										HAL_Delay(3000);
+										Def_LCD();
+									}
+							}
+							}	
+						}		
+						
+    osDelay(1);
+  }
+  /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask04 */
+/**
+* @brief Function implementing the pamiec thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void const * argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartTask04 */
 }
 
 /**
