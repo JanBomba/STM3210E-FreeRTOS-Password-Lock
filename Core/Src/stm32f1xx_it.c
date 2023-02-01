@@ -52,8 +52,8 @@ extern osSemaphoreId znak_licznikHandle;
 extern osSemaphoreId PIN_completedHandle;
 extern osMessageQId PIN_znakHandle;
 extern osSemaphoreId EnterHandle;
-extern osSemaphoreId DOWNHandle;
-extern osSemaphoreId UPHandle;
+//extern osSemaphoreId DOWNHandle;
+//extern osSemaphoreId UPHandle;
 extern osSemaphoreId SERWISHandle;
 /* USER CODE END PV */
 
@@ -253,7 +253,7 @@ void TIM6_IRQHandler(void)
 				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
 				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)){
 					//znak=11; DOWN
-					xSemaphoreGiveFromISR( DOWNHandle, &xHigherPriorityTaskWoken);
+//					xSemaphoreGiveFromISR( DOWNHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)){
@@ -303,7 +303,7 @@ void TIM6_IRQHandler(void)
 				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
 				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)){
 					//znak=9; UP
-					xSemaphoreGiveFromISR( UPHandle, &xHigherPriorityTaskWoken);
+//					xSemaphoreGiveFromISR( UPHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)){

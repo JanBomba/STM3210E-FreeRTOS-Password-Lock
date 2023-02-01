@@ -53,16 +53,16 @@ SRAM_HandleTypeDef hsram3;
 osThreadId defaultTaskHandle;
 osThreadId wyswietlanieHandle;
 osThreadId zarzadcaHandle;
-osThreadId pamiecHandle;
+osThreadId serwisHandle;
+osThreadId peryferiaHandle;
 osMessageQId PIN_znakHandle;
 osSemaphoreId znak_licznikHandle;
 osSemaphoreId PIN_completedHandle;
 osSemaphoreId EnterHandle;
-osSemaphoreId DOWNHandle;
-osSemaphoreId UPHandle;
 osSemaphoreId SERWISHandle;
 osSemaphoreId PIN_tooShortHandle;
 osSemaphoreId alarmHandle;
+osSemaphoreId PIN_correctHandle;
 /* USER CODE BEGIN PV */
 osMessageQId PINHandle;
 volatile uint8_t znak=0;
@@ -96,6 +96,7 @@ void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
 void StartTask04(void const * argument);
+void StartTask05(void const * argument);
 
 /* USER CODE BEGIN PFP */
 void Def_LCD (void);
@@ -106,6 +107,29 @@ void Def_LCD () {
 	LCD_SetTextColor(Green);
 	LCD_DisplayStringLine(Line5, pin_disp);
 }
+
+void Correct_LCD (void);
+void Correct_LCD (){
+	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
+	uint8_t PIN_correct2[20] = "                    ";
+	uint8_t PIN_correct3[20] = "               /    ";
+	uint8_t PIN_correct4[20] = "              /     ";
+	uint8_t PIN_correct5[20] = "             /      ";
+	uint8_t PIN_correct6[20] = "         \\  /       ";
+	uint8_t PIN_correct7[20] = "          \\/        ";
+	
+	LCD_Clear(Green);
+	LCD_SetBackColor(Green);
+	LCD_SetTextColor(White);
+	LCD_DisplayStringLine(Line1, PIN_correct1);
+	LCD_DisplayStringLine(Line2, PIN_correct2);
+	LCD_DisplayStringLine(Line3, PIN_correct3);
+	LCD_DisplayStringLine(Line4, PIN_correct4);
+	LCD_DisplayStringLine(Line5, PIN_correct5);
+	LCD_DisplayStringLine(Line6, PIN_correct6);
+	LCD_DisplayStringLine(Line7, PIN_correct7);
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -168,14 +192,6 @@ int main(void)
   osSemaphoreDef(Enter);
   EnterHandle = osSemaphoreCreate(osSemaphore(Enter), 1);
 
-  /* definition and creation of DOWN */
-  osSemaphoreDef(DOWN);
-  DOWNHandle = osSemaphoreCreate(osSemaphore(DOWN), 1);
-
-  /* definition and creation of UP */
-  osSemaphoreDef(UP);
-  UPHandle = osSemaphoreCreate(osSemaphore(UP), 1);
-
   /* definition and creation of SERWIS */
   osSemaphoreDef(SERWIS);
   SERWISHandle = osSemaphoreCreate(osSemaphore(SERWIS), 1);
@@ -187,6 +203,10 @@ int main(void)
   /* definition and creation of alarm */
   osSemaphoreDef(alarm);
   alarmHandle = osSemaphoreCreate(osSemaphore(alarm), 1);
+
+  /* definition and creation of PIN_correct */
+  osSemaphoreDef(PIN_correct);
+  PIN_correctHandle = osSemaphoreCreate(osSemaphore(PIN_correct), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -206,6 +226,7 @@ int main(void)
 	xSemaphoreTake(EnterHandle, NULL);
 	xSemaphoreTake(PIN_tooShortHandle, NULL);
 	xSemaphoreTake(alarmHandle, NULL);
+	xSemaphoreTake( SERWISHandle, NULL );
 	
 	osMessageQDef(PIN, 2, 4*sizeof(uint8_t));
 	PINHandle = osMessageCreate(osMessageQ(PIN), NULL);
@@ -224,9 +245,13 @@ int main(void)
   osThreadDef(zarzadca, StartTask03, osPriorityIdle, 0, 128);
   zarzadcaHandle = osThreadCreate(osThread(zarzadca), NULL);
 
-  /* definition and creation of pamiec */
-  osThreadDef(pamiec, StartTask04, osPriorityIdle, 0, 128);
-  pamiecHandle = osThreadCreate(osThread(pamiec), NULL);
+  /* definition and creation of serwis */
+  osThreadDef(serwis, StartTask04, osPriorityIdle, 0, 128);
+  serwisHandle = osThreadCreate(osThread(serwis), NULL);
+
+  /* definition and creation of peryferia */
+  osThreadDef(peryferia, StartTask05, osPriorityIdle, 0, 128);
+  peryferiaHandle = osThreadCreate(osThread(peryferia), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -648,6 +673,7 @@ void StartTask03(void const * argument)
 										LCD_DisplayStringLine(Line6, PIN_correct6);
 										LCD_DisplayStringLine(Line7, PIN_correct7);
 										correct=0;
+										alarm_cnt=0;
 										HAL_Delay(3000);
 										Def_LCD();
 								}
@@ -697,9 +723,60 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		
     osDelay(1);
   }
   /* USER CODE END StartTask04 */
+}
+
+/* USER CODE BEGIN Header_StartTask05 */
+/**
+* @brief Function implementing the peryferia thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask05 */
+void StartTask05(void const * argument)
+{
+  /* USER CODE BEGIN StartTask05 */
+	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
+	uint8_t PIN_read[4];
+	uint8_t PIN_serv[4] = {7, 8, 9, 0};
+	uint8_t correct;
+  /* Infinite loop */
+  for(;;)
+  {
+		if( SERWISHandle != NULL )
+									{
+										if( xSemaphoreTake( SERWISHandle, NULL ) == pdTRUE ){
+											vTaskSuspend(zarzadcaHandle);
+											LCD_Clear(Yellow);
+											LCD_SetBackColor(Red);
+											LCD_SetTextColor(White);
+											LCD_DisplayStringLine(Line0, serwis_disp);
+											vTaskResume(wyswietlanieHandle);
+											if( PIN_tooShortHandle != NULL )
+											{
+												if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
+											xQueueReceive(PINHandle, PIN_read, 0);
+											for(uint8_t i=0; i<4; i++)
+											if(PIN_serv[i] == PIN_read[i]) correct++;
+											if(correct == 4){
+												Correct_LCD();
+												correct=0;
+												HAL_Delay(3000);
+												Def_LCD();
+												xSemaphoreTake(alarmHandle, NULL);
+											}
+											else
+												xSemaphoreGive(SERWISHandle);
+										}
+									}
+								}
+							}
+    osDelay(1);
+  }
+  /* USER CODE END StartTask05 */
 }
 
 /**
