@@ -47,14 +47,15 @@
 DAC_HandleTypeDef hdac;
 
 TIM_HandleTypeDef htim6;
+TIM_HandleTypeDef htim7;
 
 SRAM_HandleTypeDef hsram3;
 
 osThreadId defaultTaskHandle;
 osThreadId wyswietlanieHandle;
 osThreadId zarzadcaHandle;
-osThreadId serwisHandle;
 osThreadId peryferiaHandle;
+osThreadId serwisHandle;
 osMessageQId PIN_znakHandle;
 osSemaphoreId znak_licznikHandle;
 osSemaphoreId PIN_completedHandle;
@@ -92,6 +93,7 @@ static void MX_GPIO_Init(void);
 static void MX_DAC_Init(void);
 static void MX_FSMC_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_TIM7_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
@@ -130,6 +132,39 @@ void Correct_LCD (){
 	LCD_DisplayStringLine(Line7, PIN_correct7);
 }
 
+void Incorrect_LCD (void);
+void Incorrect_LCD (){
+	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
+	uint8_t PIN_wrong2[20] = "                    ";
+	uint8_t PIN_wrong3[20] = "       \\    /       ";
+	uint8_t PIN_wrong4[20] = "        \\  /        ";
+	uint8_t PIN_wrong5[20] = "         \\/         ";
+	uint8_t PIN_wrong6[20] = "         /\\         ";
+	uint8_t PIN_wrong7[20] = "        /  \\        ";
+	uint8_t PIN_wrong8[20] = "       /    \\       ";
+	
+	LCD_Clear(Red);
+	LCD_SetBackColor(Red);
+	LCD_SetTextColor(White);
+	LCD_DisplayStringLine(Line1, PIN_wrong1);
+	LCD_DisplayStringLine(Line2, PIN_wrong2);
+	LCD_DisplayStringLine(Line3, PIN_wrong3);
+	LCD_DisplayStringLine(Line4, PIN_wrong4);
+	LCD_DisplayStringLine(Line5, PIN_wrong5);
+	LCD_DisplayStringLine(Line6, PIN_wrong6);
+	LCD_DisplayStringLine(Line7, PIN_wrong7);
+	LCD_DisplayStringLine(Line8, PIN_wrong8);
+}
+
+void Serwis_Def_LCD (void);
+void Serwis_Def_LCD () {
+	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
+	
+	LCD_Clear(Yellow);
+	LCD_SetBackColor(Red);
+	LCD_SetTextColor(White);
+	LCD_DisplayStringLine(Line0, serwis_disp);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -167,12 +202,15 @@ int main(void)
   MX_DAC_Init();
   MX_FSMC_Init();
   MX_TIM6_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 	STM3210E_LCD_Init();
 	LCD_SetBackColor(Black);
 	LCD_SetTextColor(Green);
 	HAL_TIM_Base_Start_IT(&htim6);
 	HAL_TIM_Base_Start(&htim6);
+//	HAL_TIM_Base_Start_IT(&htim7);
+//	HAL_TIM_Base_Start(&htim7);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -245,13 +283,13 @@ int main(void)
   osThreadDef(zarzadca, StartTask03, osPriorityIdle, 0, 128);
   zarzadcaHandle = osThreadCreate(osThread(zarzadca), NULL);
 
-  /* definition and creation of serwis */
-  osThreadDef(serwis, StartTask04, osPriorityIdle, 0, 128);
-  serwisHandle = osThreadCreate(osThread(serwis), NULL);
-
   /* definition and creation of peryferia */
-  osThreadDef(peryferia, StartTask05, osPriorityIdle, 0, 128);
+  osThreadDef(peryferia, StartTask04, osPriorityIdle, 0, 128);
   peryferiaHandle = osThreadCreate(osThread(peryferia), NULL);
+
+  /* definition and creation of serwis */
+  osThreadDef(serwis, StartTask05, osPriorityIdle, 0, 128);
+  serwisHandle = osThreadCreate(osThread(serwis), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -382,6 +420,44 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
+
+}
+
+/**
+  * @brief TIM7 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM7_Init(void)
+{
+
+  /* USER CODE BEGIN TIM7_Init 0 */
+
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim7.Instance = TIM7;
+  htim7.Init.Prescaler = 0;
+  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim7.Init.Period = 62;
+  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+
+  /* USER CODE END TIM7_Init 2 */
 
 }
 
@@ -650,8 +726,8 @@ void StartTask03(void const * argument)
 									LCD_DisplayStringLine(Line5, alarm_disp);
 								}
 								alarm_disp_cnt++;
-								vTaskDelay(500);
 								xSemaphoreGive(alarmHandle);
+								vTaskDelay(100);
 							}
 							else if( PIN_tooShortHandle != NULL )
 							{
@@ -739,37 +815,48 @@ void StartTask04(void const * argument)
 void StartTask05(void const * argument)
 {
   /* USER CODE BEGIN StartTask05 */
-	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
+//	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
+	uint8_t queue_disp[20];
 	uint8_t PIN_read[4];
 	uint8_t PIN_serv[4] = {7, 8, 9, 0};
 	uint8_t correct;
+	uint8_t i;
   /* Infinite loop */
   for(;;)
   {
-		if( SERWISHandle != NULL )
+		if( SERWISHandle != NULL)
 									{
 										if( xSemaphoreTake( SERWISHandle, NULL ) == pdTRUE ){
-											vTaskSuspend(zarzadcaHandle);
-											LCD_Clear(Yellow);
-											LCD_SetBackColor(Red);
-											LCD_SetTextColor(White);
-											LCD_DisplayStringLine(Line0, serwis_disp);
-											vTaskResume(wyswietlanieHandle);
+											xSemaphoreGive(SERWISHandle);
+											if(!i){
+													vTaskSuspend(zarzadcaHandle);
+													Serwis_Def_LCD();
+													vTaskResume(wyswietlanieHandle);
+													i++;
+											}
 											if( PIN_tooShortHandle != NULL )
 											{
 												if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
-											xQueueReceive(PINHandle, PIN_read, 0);
-											for(uint8_t i=0; i<4; i++)
-											if(PIN_serv[i] == PIN_read[i]) correct++;
-											if(correct == 4){
-												Correct_LCD();
-												correct=0;
-												HAL_Delay(3000);
-												Def_LCD();
-												xSemaphoreTake(alarmHandle, NULL);
-											}
-											else
-												xSemaphoreGive(SERWISHandle);
+													xQueueReceive(PINHandle, PIN_read, 0);
+													sprintf( (char *) queue_disp, "kolejka: %d %d %d %d", PIN_read[0], PIN_read[1], PIN_read[2], PIN_read[3]);
+													LCD_DisplayStringLine(Line9, queue_disp);
+													for(uint8_t i=0; i<4; i++)
+														if(PIN_serv[i] == PIN_read[i]) correct++;
+													if(correct == 4){
+														Correct_LCD();
+														correct=0;
+														i=0;
+														HAL_Delay(3000);
+														Def_LCD();
+														xSemaphoreTake(alarmHandle, NULL);
+														xSemaphoreTake( SERWISHandle, NULL );
+														vTaskResume(zarzadcaHandle);
+											}	else {
+														Incorrect_LCD();
+														correct=0;
+														HAL_Delay(5000);
+														Serwis_Def_LCD();
+												}
 										}
 									}
 								}
