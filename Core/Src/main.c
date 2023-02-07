@@ -36,6 +36,8 @@
 /* USER CODE BEGIN PD */
 #define dBounceTime  10
 #define DisplayWidth 20
+#define AccessTime 3000
+#define Title "<<<ZAMEK SZYFROWY>>>"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,10 +46,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-DAC_HandleTypeDef hdac;
-
 TIM_HandleTypeDef htim6;
-TIM_HandleTypeDef htim7;
 
 SRAM_HandleTypeDef hsram3;
 
@@ -66,34 +65,13 @@ osSemaphoreId alarmHandle;
 osSemaphoreId PIN_correctHandle;
 /* USER CODE BEGIN PV */
 osMessageQId PINHandle;
-volatile uint8_t znak=0;
-volatile uint8_t symbol=99;
-volatile uint8_t klawisz_0=0;
-volatile uint8_t klawisz_1=0;
-volatile uint8_t klawisz_2=0;
-volatile uint8_t klawisz_3=0;
-volatile uint8_t klawisz_4=0;
-volatile uint8_t klawisz_5=0;
-volatile uint8_t klawisz_6=0;
-volatile uint8_t klawisz_7=0;
-volatile uint8_t klawisz_8=0;
-volatile uint8_t klawisz_9=0;
-volatile uint8_t klawisz_A=0;
-volatile uint8_t klawisz_B=0;
-volatile uint8_t klawisz_C=0;
-volatile uint8_t klawisz_D=0;
-volatile uint8_t klawisz_K=0;
-volatile uint8_t klawisz_G=0;
-volatile uint8_t n=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DAC_Init(void);
 static void MX_FSMC_Init(void);
 static void MX_TIM6_Init(void);
-static void MX_TIM7_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
@@ -107,6 +85,14 @@ void Def_LCD () {
 	LCD_Clear(Black);
 	LCD_SetBackColor(Black);
 	LCD_SetTextColor(Green);
+	LCD_DisplayStringLine(Line0, Title);
+	LCD_DisplayStringLine(Line5, pin_disp);
+}
+
+void PIN_LCD (void);
+void PIN_LCD () {
+	uint8_t pin_disp [20] = "PIN: ";
+	LCD_ClearLine(Line5);
 	LCD_DisplayStringLine(Line5, pin_disp);
 }
 
@@ -199,18 +185,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DAC_Init();
   MX_FSMC_Init();
   MX_TIM6_Init();
-  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 	STM3210E_LCD_Init();
 	LCD_SetBackColor(Black);
 	LCD_SetTextColor(Green);
 	HAL_TIM_Base_Start_IT(&htim6);
 	HAL_TIM_Base_Start(&htim6);
-//	HAL_TIM_Base_Start_IT(&htim7);
-//	HAL_TIM_Base_Start(&htim7);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -265,6 +247,7 @@ int main(void)
 	xSemaphoreTake(PIN_tooShortHandle, NULL);
 	xSemaphoreTake(alarmHandle, NULL);
 	xSemaphoreTake( SERWISHandle, NULL );
+	xSemaphoreTake(PIN_correctHandle, NULL);
 	
 	osMessageQDef(PIN, 2, 4*sizeof(uint8_t));
 	PINHandle = osMessageCreate(osMessageQ(PIN), NULL);
@@ -346,46 +329,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief DAC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_DAC_Init(void)
-{
-
-  /* USER CODE BEGIN DAC_Init 0 */
-
-  /* USER CODE END DAC_Init 0 */
-
-  DAC_ChannelConfTypeDef sConfig = {0};
-
-  /* USER CODE BEGIN DAC_Init 1 */
-
-  /* USER CODE END DAC_Init 1 */
-
-  /** DAC Initialization
-  */
-  hdac.Instance = DAC;
-  if (HAL_DAC_Init(&hdac) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** DAC channel OUT1 config
-  */
-  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
-  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
-  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN DAC_Init 2 */
-
-  /* USER CODE END DAC_Init 2 */
-
-}
-
-/**
   * @brief TIM6 Initialization Function
   * @param None
   * @retval None
@@ -424,44 +367,6 @@ static void MX_TIM6_Init(void)
 }
 
 /**
-  * @brief TIM7 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM7_Init(void)
-{
-
-  /* USER CODE BEGIN TIM7_Init 0 */
-
-  /* USER CODE END TIM7_Init 0 */
-
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM7_Init 1 */
-
-  /* USER CODE END TIM7_Init 1 */
-  htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 0;
-  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 62;
-  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM7_Init 2 */
-
-  /* USER CODE END TIM7_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -474,7 +379,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
@@ -482,11 +386,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, w1_Pin|w2_Pin|w3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, w4_Pin|LED1_Pin|LED2_Pin|LED3_Pin
-                          |LED4_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, w4_Pin|Buzzer_Pin|LED1_Pin|LED2_Pin
+                          |LED3_Pin|LED4_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(Relay_GPIO_Port, Relay_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Relay_GPIO_Port, Relay_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : w1_Pin w2_Pin w3_Pin */
   GPIO_InitStruct.Pin = w1_Pin|w2_Pin|w3_Pin;
@@ -507,26 +411,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : w4_Pin */
-  GPIO_InitStruct.Pin = w4_Pin;
+  /*Configure GPIO pins : w4_Pin Relay_Pin */
+  GPIO_InitStruct.Pin = w4_Pin|Relay_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(w4_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin;
+  /*Configure GPIO pins : Buzzer_Pin LED1_Pin LED2_Pin LED3_Pin
+                           LED4_Pin */
+  GPIO_InitStruct.Pin = Buzzer_Pin|LED1_Pin|LED2_Pin|LED3_Pin
+                          |LED4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : Relay_Pin */
-  GPIO_InitStruct.Pin = Relay_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(Relay_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin : PA4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
@@ -620,30 +524,20 @@ void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
 	uint8_t i=0;
-	uint8_t i_disp[20];
-	uint8_t PIN_disp[20];
-	uint8_t symbol_disp [20];
 	uint8_t PIN[4];
-	uint8_t pin_disp [20] = "PIN: ";
+	//uint8_t pin_disp [20] = "PIN: ";
 	Def_LCD();
-//	uint8_t znak_disp [20];
-//	uint8_t n_disp [20];
 //  /* Infinite loop */
 for(;;)
 {
-	sprintf( (char *)symbol_disp, "znak: %d ", znak);
-	LCD_DisplayStringLine(Line1, symbol_disp);
 	if( znak_licznikHandle != NULL )
     {
 			if( xSemaphoreTake( znak_licznikHandle, NULL ) == pdTRUE )
         {
-					//GPIOF->ODR ^= (1<<6);
 					if (i==5)	xSemaphoreTake(PIN_completedHandle, NULL);
 					if(i!=0 && i<5)	LCD_DisplayChar(Line5, 250-20*i, '*');
 					xQueueReceive(PIN_znakHandle, &PIN[i-1], NULL);
 					i++;
-					sprintf( (char *)i_disp, "i: %d ", i);
-					LCD_DisplayStringLine(Line2, i_disp);
 					}
 				}
 		if( EnterHandle != NULL )
@@ -651,18 +545,15 @@ for(;;)
 								if( xSemaphoreTake( EnterHandle, NULL ) == pdTRUE )
 									{
 										if(i>=5) {
-										LCD_ClearLine(Line5);
-										LCD_DisplayStringLine(Line5, pin_disp);
-										sprintf( (char*)PIN_disp,"PIN: %d %d %d %d", PIN[0], PIN[1], PIN[2], PIN[3]);
-										LCD_DisplayStringLine(Line3, PIN_disp);
+										PIN_LCD();
 										xSemaphoreGive(PIN_completedHandle);
 										xQueueSend(PINHandle, PIN, NULL);
 										i=1;
 										xSemaphoreGive(PIN_tooShortHandle);
 											}
 										else {
-										LCD_ClearLine(Line5);
-										LCD_DisplayStringLine(Line5, pin_disp);
+
+										PIN_LCD();
 										xSemaphoreTake(PIN_tooShortHandle, NULL);
 										i=1;
 										}
@@ -685,23 +576,22 @@ void StartTask03(void const * argument)
   /* USER CODE BEGIN StartTask03 */
 	uint8_t PIN_mem[4] = {0, 1, 2, 3};
 	uint8_t PIN_read[4];
-	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
-	uint8_t PIN_correct2[20] = "                    ";
-	uint8_t PIN_correct3[20] = "               /    ";
-	uint8_t PIN_correct4[20] = "              /     ";
-	uint8_t PIN_correct5[20] = "             /      ";
-	uint8_t PIN_correct6[20] = "         \\  /       ";
-	uint8_t PIN_correct7[20] = "          \\/        ";
+//	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
+//	uint8_t PIN_correct2[20] = "                    ";
+//	uint8_t PIN_correct3[20] = "               /    ";
+//	uint8_t PIN_correct4[20] = "              /     ";
+//	uint8_t PIN_correct5[20] = "             /      ";
+//	uint8_t PIN_correct6[20] = "         \\  /       ";
+//	uint8_t PIN_correct7[20] = "          \\/        ";
 	uint8_t correct=0;
-	uint8_t kolejka_disp[20];
-	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
-	uint8_t PIN_wrong2[20] = "                    ";
-	uint8_t PIN_wrong3[20] = "       \\    /       ";
-	uint8_t PIN_wrong4[20] = "        \\  /        ";
-	uint8_t PIN_wrong5[20] = "         \\/         ";
-	uint8_t PIN_wrong6[20] = "         /\\         ";
-	uint8_t PIN_wrong7[20] = "        /  \\        ";
-	uint8_t PIN_wrong8[20] = "       /    \\       ";
+//	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
+//	uint8_t PIN_wrong2[20] = "                    ";
+//	uint8_t PIN_wrong3[20] = "       \\    /       ";
+//	uint8_t PIN_wrong4[20] = "        \\  /        ";
+//	uint8_t PIN_wrong5[20] = "         \\/         ";
+//	uint8_t PIN_wrong6[20] = "         /\\         ";
+//	uint8_t PIN_wrong7[20] = "        /  \\        ";
+//	uint8_t PIN_wrong8[20] = "       /    \\       ";
 	uint8_t alarm_cnt=0;
 	uint8_t alarm_cnt_disp[20];
 	uint8_t alarm_disp[20] = "    ALARM!!!!!!     ";
@@ -733,38 +623,39 @@ void StartTask03(void const * argument)
 							{
 								if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
 									xQueueReceive(PINHandle, PIN_read, 0);
-									sprintf( (char *) kolejka_disp, "kolejka: %d %d %d %d", PIN_read[0], PIN_read[1], PIN_read[2], PIN_read[3]);
-									LCD_DisplayStringLine(Line9, kolejka_disp);
 									for(uint8_t i=0; i<4; i++)
 										if(PIN_mem[i] == PIN_read[i]) correct++;
 									if(correct == 4){
-										LCD_Clear(Green);
-										LCD_SetBackColor(Green);
-										LCD_SetTextColor(White);
-										LCD_DisplayStringLine(Line1, PIN_correct1);
-										LCD_DisplayStringLine(Line2, PIN_correct2);
-										LCD_DisplayStringLine(Line3, PIN_correct3);
-										LCD_DisplayStringLine(Line4, PIN_correct4);
-										LCD_DisplayStringLine(Line5, PIN_correct5);
-										LCD_DisplayStringLine(Line6, PIN_correct6);
-										LCD_DisplayStringLine(Line7, PIN_correct7);
+//										LCD_Clear(Green);
+//										LCD_SetBackColor(Green);
+//										LCD_SetTextColor(White);
+//										LCD_DisplayStringLine(Line1, PIN_correct1);
+//										LCD_DisplayStringLine(Line2, PIN_correct2);
+//										LCD_DisplayStringLine(Line3, PIN_correct3);
+//										LCD_DisplayStringLine(Line4, PIN_correct4);
+//										LCD_DisplayStringLine(Line5, PIN_correct5);
+//										LCD_DisplayStringLine(Line6, PIN_correct6);
+//										LCD_DisplayStringLine(Line7, PIN_correct7);
+										Correct_LCD();
+										xSemaphoreGive(PIN_correctHandle);
 										correct=0;
 										alarm_cnt=0;
-										HAL_Delay(3000);
+										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
 										Def_LCD();
 								}
 									else{
-										LCD_Clear(Red);
-										LCD_SetBackColor(Red);
-										LCD_SetTextColor(White);
-										LCD_DisplayStringLine(Line1, PIN_wrong1);
-										LCD_DisplayStringLine(Line2, PIN_wrong2);
-										LCD_DisplayStringLine(Line3, PIN_wrong3);
-										LCD_DisplayStringLine(Line4, PIN_wrong4);
-										LCD_DisplayStringLine(Line5, PIN_wrong5);
-										LCD_DisplayStringLine(Line6, PIN_wrong6);
-										LCD_DisplayStringLine(Line7, PIN_wrong7);
-										LCD_DisplayStringLine(Line8, PIN_wrong8);
+//										LCD_Clear(Red);
+//										LCD_SetBackColor(Red);
+//										LCD_SetTextColor(White);
+//										LCD_DisplayStringLine(Line1, PIN_wrong1);
+//										LCD_DisplayStringLine(Line2, PIN_wrong2);
+//										LCD_DisplayStringLine(Line3, PIN_wrong3);
+//										LCD_DisplayStringLine(Line4, PIN_wrong4);
+//										LCD_DisplayStringLine(Line5, PIN_wrong5);
+//										LCD_DisplayStringLine(Line6, PIN_wrong6);
+//										LCD_DisplayStringLine(Line7, PIN_wrong7);
+//										LCD_DisplayStringLine(Line8, PIN_wrong8);
+										Incorrect_LCD();
 										correct=0;
 										alarm_cnt++;
 										if(alarm_cnt == 3){
@@ -774,7 +665,7 @@ void StartTask03(void const * argument)
 										sprintf(( char*) alarm_cnt_disp, "Pozostalo prob: %d", 3-alarm_cnt);
 										LCD_DisplayStringLine(Line9, alarm_cnt_disp);
 										}
-										HAL_Delay(3000);
+										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
 										Def_LCD();
 									}
 							}
@@ -799,7 +690,23 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		
+		if( alarmHandle != NULL )
+						{
+							if( xSemaphoreTake( alarmHandle, NULL ) == pdTRUE ){
+								Buzzer_GPIO_Port->ODR |= (1<<5);
+								xSemaphoreGive(alarmHandle);
+							}
+							else
+								Buzzer_GPIO_Port->ODR &= ~(1<<5);
+						}
+		if( PIN_correctHandle != NULL )
+						{
+							if( xSemaphoreTake( PIN_correctHandle, NULL ) == pdTRUE ){
+								Relay_GPIO_Port->ODR &= ~(1<<4);
+								vTaskDelay(AccessTime/portTICK_PERIOD_MS);
+								Relay_GPIO_Port->ODR |= (1<<4);
+							}
+						}
     osDelay(1);
   }
   /* USER CODE END StartTask04 */
@@ -815,8 +722,6 @@ void StartTask04(void const * argument)
 void StartTask05(void const * argument)
 {
   /* USER CODE BEGIN StartTask05 */
-//	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
-	uint8_t queue_disp[20];
 	uint8_t PIN_read[4];
 	uint8_t PIN_serv[4] = {7, 8, 9, 0};
 	uint8_t correct;
@@ -831,6 +736,7 @@ void StartTask05(void const * argument)
 											if(!i){
 													vTaskSuspend(zarzadcaHandle);
 													Serwis_Def_LCD();
+													PIN_LCD();
 													vTaskResume(wyswietlanieHandle);
 													i++;
 											}
@@ -838,15 +744,13 @@ void StartTask05(void const * argument)
 											{
 												if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
 													xQueueReceive(PINHandle, PIN_read, 0);
-													sprintf( (char *) queue_disp, "kolejka: %d %d %d %d", PIN_read[0], PIN_read[1], PIN_read[2], PIN_read[3]);
-													LCD_DisplayStringLine(Line9, queue_disp);
 													for(uint8_t i=0; i<4; i++)
 														if(PIN_serv[i] == PIN_read[i]) correct++;
 													if(correct == 4){
 														Correct_LCD();
 														correct=0;
 														i=0;
-														HAL_Delay(3000);
+														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
 														Def_LCD();
 														xSemaphoreTake(alarmHandle, NULL);
 														xSemaphoreTake( SERWISHandle, NULL );
@@ -854,8 +758,9 @@ void StartTask05(void const * argument)
 											}	else {
 														Incorrect_LCD();
 														correct=0;
-														HAL_Delay(5000);
+														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
 														Serwis_Def_LCD();
+														PIN_LCD();
 												}
 										}
 									}
