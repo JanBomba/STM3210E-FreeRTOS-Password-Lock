@@ -46,15 +46,14 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern uint8_t znak;
-extern uint8_t n;
+uint8_t znak;
+uint8_t n;
 extern osSemaphoreId znak_licznikHandle;
 extern osSemaphoreId PIN_completedHandle;
 extern osMessageQId PIN_znakHandle;
 extern osSemaphoreId EnterHandle;
-extern osSemaphoreId DOWNHandle;
-extern osSemaphoreId UPHandle;
 extern osSemaphoreId SERWISHandle;
+extern osSemaphoreId alarmHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -204,7 +203,6 @@ void TIM6_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim6);
   /* USER CODE BEGIN TIM6_IRQn 1 */
 	HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
-	//if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)) GPIOF->ODR ^= (1<<6);
 	HAL_GPIO_WritePin(w1_GPIO_Port, w1_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(w2_GPIO_Port, w2_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_RESET);
@@ -243,6 +241,8 @@ void TIM6_IRQHandler(void)
 				}
 				}
 				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)){
+					//SERWIS
+					xSemaphoreGiveFromISR( SERWISHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				break;
@@ -252,8 +252,6 @@ void TIM6_IRQHandler(void)
 				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
 				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
 				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)){
-					//znak=11; DOWN
-					xSemaphoreGiveFromISR( DOWNHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)){
@@ -302,8 +300,6 @@ void TIM6_IRQHandler(void)
 				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_SET);
 				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)){
-					//znak=9; UP
-					xSemaphoreGiveFromISR( UPHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)){
@@ -352,8 +348,6 @@ void TIM6_IRQHandler(void)
 				HAL_GPIO_WritePin(w3_GPIO_Port, w3_Pin, GPIO_PIN_SET);
 				HAL_GPIO_WritePin(w4_GPIO_Port, w4_Pin, GPIO_PIN_RESET);
 				if(!HAL_GPIO_ReadPin(k1_GPIO_Port, k1_Pin)){
-					//znak=13; SERWIS
-					xSemaphoreGiveFromISR( SERWISHandle, &xHigherPriorityTaskWoken);
 					n++;
 				}
 				if(!HAL_GPIO_ReadPin(k2_GPIO_Port, k2_Pin)){

@@ -6,8 +6,6 @@
 "zamek\stm32f1xx_it.o"
 "zamek\stm32f1xx_hal_msp.o"
 "zamek\stm32f1xx_hal_gpio_ex.o"
-"zamek\stm32f1xx_hal_dac.o"
-"zamek\stm32f1xx_hal_dac_ex.o"
 "zamek\stm32f1xx_hal.o"
 "zamek\stm32f1xx_hal_rcc.o"
 "zamek\stm32f1xx_hal_rcc_ex.o"
