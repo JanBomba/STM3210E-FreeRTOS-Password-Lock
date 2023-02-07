@@ -55,7 +55,6 @@ osThreadId peryferiaHandle;
 osThreadId serwisHandle;
 osMessageQId PIN_znakHandle;
 osSemaphoreId znak_licznikHandle;
-osSemaphoreId PIN_completedHandle;
 osSemaphoreId EnterHandle;
 osSemaphoreId SERWISHandle;
 osSemaphoreId PIN_tooShortHandle;
@@ -130,10 +129,6 @@ int main(void)
   /* definition and creation of znak_licznik */
   osSemaphoreDef(znak_licznik);
   znak_licznikHandle = osSemaphoreCreate(osSemaphore(znak_licznik), 1);
-
-  /* definition and creation of PIN_completed */
-  osSemaphoreDef(PIN_completed);
-  PIN_completedHandle = osSemaphoreCreate(osSemaphore(PIN_completed), 1);
 
   /* definition and creation of Enter */
   osSemaphoreDef(Enter);

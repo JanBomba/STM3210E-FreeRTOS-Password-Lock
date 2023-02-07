@@ -27,45 +27,45 @@ void Def_LCD () {
 	LCD_Clear(Black);
 	LCD_SetBackColor(Black);
 	LCD_SetTextColor(Green);
-	LCD_DisplayStringLine(Line0, Title);
-	LCD_DisplayStringLine(Line5, pin_disp);
+	LCD_DisplayStringLine(Line0, (uint8_t*)Title);
+	LCD_DisplayStringLine(Line5, (uint8_t*)pin_disp);
 }
 
 void PIN_LCD () {
 	LCD_ClearLine(Line5);
-	LCD_DisplayStringLine(Line5, pin_disp);
+	LCD_DisplayStringLine(Line5, (uint8_t*)pin_disp);
 }
 
 void Correct_LCD (){
 	LCD_Clear(Green);
 	LCD_SetBackColor(Green);
 	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line1, PIN_correct1);
-	LCD_DisplayStringLine(Line2, PIN_correct2);
-	LCD_DisplayStringLine(Line3, PIN_correct3);
-	LCD_DisplayStringLine(Line4, PIN_correct4);
-	LCD_DisplayStringLine(Line5, PIN_correct5);
-	LCD_DisplayStringLine(Line6, PIN_correct6);
-	LCD_DisplayStringLine(Line7, PIN_correct7);
+	LCD_DisplayStringLine(Line1, (uint8_t*)PIN_correct1);
+	LCD_DisplayStringLine(Line2, (uint8_t*)PIN_correct2);
+	LCD_DisplayStringLine(Line3, (uint8_t*)PIN_correct3);
+	LCD_DisplayStringLine(Line4, (uint8_t*)PIN_correct4);
+	LCD_DisplayStringLine(Line5, (uint8_t*)PIN_correct5);
+	LCD_DisplayStringLine(Line6, (uint8_t*)PIN_correct6);
+	LCD_DisplayStringLine(Line7, (uint8_t*)PIN_correct7);
 }
 
 void Incorrect_LCD (){
 	LCD_Clear(Red);
 	LCD_SetBackColor(Red);
 	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line1, PIN_wrong1);
-	LCD_DisplayStringLine(Line2, PIN_wrong2);
-	LCD_DisplayStringLine(Line3, PIN_wrong3);
-	LCD_DisplayStringLine(Line4, PIN_wrong4);
-	LCD_DisplayStringLine(Line5, PIN_wrong5);
-	LCD_DisplayStringLine(Line6, PIN_wrong6);
-	LCD_DisplayStringLine(Line7, PIN_wrong7);
-	LCD_DisplayStringLine(Line8, PIN_wrong8);
+	LCD_DisplayStringLine(Line1, (uint8_t*)PIN_wrong1);
+	LCD_DisplayStringLine(Line2, (uint8_t*)PIN_wrong2);
+	LCD_DisplayStringLine(Line3, (uint8_t*)PIN_wrong3);
+	LCD_DisplayStringLine(Line4, (uint8_t*)PIN_wrong4);
+	LCD_DisplayStringLine(Line5, (uint8_t*)PIN_wrong5);
+	LCD_DisplayStringLine(Line6, (uint8_t*)PIN_wrong6);
+	LCD_DisplayStringLine(Line7, (uint8_t*)PIN_wrong7);
+	LCD_DisplayStringLine(Line8, (uint8_t*)PIN_wrong8);
 }
 
 void Serwis_Def_LCD () {
 	LCD_Clear(Yellow);
 	LCD_SetBackColor(Red);
 	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line0, serwis_disp);
+	LCD_DisplayStringLine(Line0, (uint8_t*)serwis_disp);
 }

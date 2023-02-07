@@ -1,5 +1,7 @@
 #include "my_tasks.h"
 
+#define alarm_disp "    ALARM!!!!!!     "
+
 extern osThreadId defaultTaskHandle;
 extern osThreadId wyswietlanieHandle;
 extern osThreadId zarzadcaHandle;
@@ -7,7 +9,6 @@ extern osThreadId peryferiaHandle;
 extern osThreadId serwisHandle;
 extern osMessageQId PIN_znakHandle;
 extern osSemaphoreId znak_licznikHandle;
-extern osSemaphoreId PIN_completedHandle;
 extern osSemaphoreId EnterHandle;
 extern osSemaphoreId SERWISHandle;
 extern osSemaphoreId PIN_tooShortHandle;
@@ -35,7 +36,6 @@ for(;;)
     {
 			if( xSemaphoreTake( znak_licznikHandle, NULL ) == pdTRUE )
         {
-					if (i==5)	xSemaphoreTake(PIN_completedHandle, NULL);
 					if(i!=0 && i<5)	LCD_DisplayChar(Line5, 250-20*i, '*');
 					xQueueReceive(PIN_znakHandle, &PIN[i-1], NULL);
 					i++;
@@ -47,7 +47,6 @@ for(;;)
 									{
 										if(i>=5) {
 										PIN_LCD();
-										xSemaphoreGive(PIN_completedHandle);
 										xQueueSend(PINHandle, PIN, NULL);
 										i=1;
 										xSemaphoreGive(PIN_tooShortHandle);
@@ -80,7 +79,6 @@ void StartTask03(void const * argument)
 	uint8_t correct=0;
 	uint8_t alarm_cnt=0;
 	uint8_t alarm_cnt_disp[20];
-	uint8_t alarm_disp[20] = "    ALARM!!!!!!     ";
 	uint8_t alarm_disp_cnt =0;
   /* Infinite loop */
   for(;;)
@@ -93,13 +91,13 @@ void StartTask03(void const * argument)
 									LCD_Clear(Black);
 									LCD_SetBackColor(Black);
 									LCD_SetTextColor(Red);
-									LCD_DisplayStringLine(Line5, alarm_disp);
+									LCD_DisplayStringLine(Line5, (uint8_t*)alarm_disp);
 								}
 								else {
 									LCD_Clear(Red);
 									LCD_SetBackColor(Red);
 									LCD_SetTextColor(White);
-									LCD_DisplayStringLine(Line5, alarm_disp);
+									LCD_DisplayStringLine(Line5, (uint8_t*)alarm_disp);
 								}
 								alarm_disp_cnt++;
 								xSemaphoreGive(alarmHandle);
@@ -112,14 +110,17 @@ void StartTask03(void const * argument)
 									for(uint8_t i=0; i<4; i++)
 										if(PIN_mem[i] == PIN_read[i]) correct++;
 									if(correct == 4){
+										vTaskSuspend(wyswietlanieHandle);
 										Correct_LCD();
 										xSemaphoreGive(PIN_correctHandle);
 										correct=0;
 										alarm_cnt=0;
 										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
+										vTaskResume(wyswietlanieHandle);
 										Def_LCD();
 								}
 									else{
+										vTaskSuspend(wyswietlanieHandle);
 										Incorrect_LCD();
 										correct=0;
 										alarm_cnt++;
@@ -131,6 +132,7 @@ void StartTask03(void const * argument)
 										LCD_DisplayStringLine(Line9, alarm_cnt_disp);
 										}
 										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
+										vTaskResume(wyswietlanieHandle);
 										Def_LCD();
 									}
 							}
@@ -212,18 +214,22 @@ void StartTask05(void const * argument)
 													for(uint8_t i=0; i<4; i++)
 														if(PIN_serv[i] == PIN_read[i]) correct++;
 													if(correct == 4){
+														vTaskSuspend(wyswietlanieHandle);
 														Correct_LCD();
 														correct=0;
 														i=0;
 														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
+														vTaskResume(wyswietlanieHandle);
 														Def_LCD();
 														xSemaphoreTake(alarmHandle, NULL);
 														xSemaphoreTake( SERWISHandle, NULL );
 														vTaskResume(zarzadcaHandle);
 											}	else {
+														vTaskSuspend(wyswietlanieHandle);
 														Incorrect_LCD();
 														correct=0;
 														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
+														vTaskResume(wyswietlanieHandle);
 														Serwis_Def_LCD();
 														PIN_LCD();
 												}

@@ -1,4 +1,5 @@
 #include "lcd.h"
+#include "stm32f1xx_hal.h"
 
 void Def_LCD (void);
 void PIN_LCD (void);

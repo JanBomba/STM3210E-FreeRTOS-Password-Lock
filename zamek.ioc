@@ -2,7 +2,7 @@
 CAD.formats=
 CAD.pinconfig=
 CAD.provider=
-FREERTOS.BinarySemaphores01=znak_licznik,Dynamic,NULL;PIN_completed,Dynamic,NULL;Enter,Dynamic,NULL;SERWIS,Dynamic,NULL;PIN_tooShort,Dynamic,NULL;alarm,Dynamic,NULL;PIN_correct,Dynamic,NULL
+FREERTOS.BinarySemaphores01=znak_licznik,Dynamic,NULL;Enter,Dynamic,NULL;SERWIS,Dynamic,NULL;PIN_tooShort,Dynamic,NULL;alarm,Dynamic,NULL;PIN_correct,Dynamic,NULL
 FREERTOS.FootprintOK=true
 FREERTOS.IPParameters=Tasks01,configUSE_COUNTING_SEMAPHORES,configUSE_PREEMPTION,configIDLE_SHOULD_YIELD,configENABLE_BACKWARD_COMPATIBILITY,configUSE_TASK_NOTIFICATIONS,FootprintOK,configUSE_TIMERS,configTIMER_TASK_PRIORITY,BinarySemaphores01,Queues01,configTOTAL_HEAP_SIZE
 FREERTOS.Queues01=PIN_znak,1,uint8_t,0,Dynamic,NULL,NULL
