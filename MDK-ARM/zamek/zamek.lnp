@@ -5,6 +5,8 @@
 "zamek\freertos.o"
 "zamek\stm32f1xx_it.o"
 "zamek\stm32f1xx_hal_msp.o"
+"zamek\display_command.o"
+"zamek\my_tasks.o"
 "zamek\stm32f1xx_hal_gpio_ex.o"
 "zamek\stm32f1xx_hal.o"
 "zamek\stm32f1xx_hal_rcc.o"

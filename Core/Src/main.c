@@ -22,9 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "timers.h"
 #include "lcd.h"
 #include "stdio.h"
+#include "display_command.h"
+#include "my_tasks.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,10 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define dBounceTime  10
-#define DisplayWidth 20
 #define AccessTime 3000
-#define Title "<<<ZAMEK SZYFROWY>>>"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,7 +55,6 @@ osThreadId peryferiaHandle;
 osThreadId serwisHandle;
 osMessageQId PIN_znakHandle;
 osSemaphoreId znak_licznikHandle;
-osSemaphoreId PIN_completedHandle;
 osSemaphoreId EnterHandle;
 osSemaphoreId SERWISHandle;
 osSemaphoreId PIN_tooShortHandle;
@@ -79,78 +76,7 @@ void StartTask04(void const * argument);
 void StartTask05(void const * argument);
 
 /* USER CODE BEGIN PFP */
-void Def_LCD (void);
-void Def_LCD () {
-	uint8_t pin_disp [20] = "PIN: ";
-	LCD_Clear(Black);
-	LCD_SetBackColor(Black);
-	LCD_SetTextColor(Green);
-	LCD_DisplayStringLine(Line0, Title);
-	LCD_DisplayStringLine(Line5, pin_disp);
-}
 
-void PIN_LCD (void);
-void PIN_LCD () {
-	uint8_t pin_disp [20] = "PIN: ";
-	LCD_ClearLine(Line5);
-	LCD_DisplayStringLine(Line5, pin_disp);
-}
-
-void Correct_LCD (void);
-void Correct_LCD (){
-	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
-	uint8_t PIN_correct2[20] = "                    ";
-	uint8_t PIN_correct3[20] = "               /    ";
-	uint8_t PIN_correct4[20] = "              /     ";
-	uint8_t PIN_correct5[20] = "             /      ";
-	uint8_t PIN_correct6[20] = "         \\  /       ";
-	uint8_t PIN_correct7[20] = "          \\/        ";
-	
-	LCD_Clear(Green);
-	LCD_SetBackColor(Green);
-	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line1, PIN_correct1);
-	LCD_DisplayStringLine(Line2, PIN_correct2);
-	LCD_DisplayStringLine(Line3, PIN_correct3);
-	LCD_DisplayStringLine(Line4, PIN_correct4);
-	LCD_DisplayStringLine(Line5, PIN_correct5);
-	LCD_DisplayStringLine(Line6, PIN_correct6);
-	LCD_DisplayStringLine(Line7, PIN_correct7);
-}
-
-void Incorrect_LCD (void);
-void Incorrect_LCD (){
-	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
-	uint8_t PIN_wrong2[20] = "                    ";
-	uint8_t PIN_wrong3[20] = "       \\    /       ";
-	uint8_t PIN_wrong4[20] = "        \\  /        ";
-	uint8_t PIN_wrong5[20] = "         \\/         ";
-	uint8_t PIN_wrong6[20] = "         /\\         ";
-	uint8_t PIN_wrong7[20] = "        /  \\        ";
-	uint8_t PIN_wrong8[20] = "       /    \\       ";
-	
-	LCD_Clear(Red);
-	LCD_SetBackColor(Red);
-	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line1, PIN_wrong1);
-	LCD_DisplayStringLine(Line2, PIN_wrong2);
-	LCD_DisplayStringLine(Line3, PIN_wrong3);
-	LCD_DisplayStringLine(Line4, PIN_wrong4);
-	LCD_DisplayStringLine(Line5, PIN_wrong5);
-	LCD_DisplayStringLine(Line6, PIN_wrong6);
-	LCD_DisplayStringLine(Line7, PIN_wrong7);
-	LCD_DisplayStringLine(Line8, PIN_wrong8);
-}
-
-void Serwis_Def_LCD (void);
-void Serwis_Def_LCD () {
-	uint8_t serwis_disp[20] = "Podaj PIN serwisowy";
-	
-	LCD_Clear(Yellow);
-	LCD_SetBackColor(Red);
-	LCD_SetTextColor(White);
-	LCD_DisplayStringLine(Line0, serwis_disp);
-}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -203,10 +129,6 @@ int main(void)
   /* definition and creation of znak_licznik */
   osSemaphoreDef(znak_licznik);
   znak_licznikHandle = osSemaphoreCreate(osSemaphore(znak_licznik), 1);
-
-  /* definition and creation of PIN_completed */
-  osSemaphoreDef(PIN_completed);
-  PIN_completedHandle = osSemaphoreCreate(osSemaphore(PIN_completed), 1);
 
   /* definition and creation of Enter */
   osSemaphoreDef(Enter);
@@ -511,264 +433,6 @@ void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_StartTask02 */
-/**
-* @brief Function implementing the klawiatura_debo thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask02 */
-void StartTask02(void const * argument)
-{
-  /* USER CODE BEGIN StartTask02 */
-	uint8_t i=0;
-	uint8_t PIN[4];
-	//uint8_t pin_disp [20] = "PIN: ";
-	Def_LCD();
-//  /* Infinite loop */
-for(;;)
-{
-	if( znak_licznikHandle != NULL )
-    {
-			if( xSemaphoreTake( znak_licznikHandle, NULL ) == pdTRUE )
-        {
-					if (i==5)	xSemaphoreTake(PIN_completedHandle, NULL);
-					if(i!=0 && i<5)	LCD_DisplayChar(Line5, 250-20*i, '*');
-					xQueueReceive(PIN_znakHandle, &PIN[i-1], NULL);
-					i++;
-					}
-				}
-		if( EnterHandle != NULL )
-							{
-								if( xSemaphoreTake( EnterHandle, NULL ) == pdTRUE )
-									{
-										if(i>=5) {
-										PIN_LCD();
-										xSemaphoreGive(PIN_completedHandle);
-										xQueueSend(PINHandle, PIN, NULL);
-										i=1;
-										xSemaphoreGive(PIN_tooShortHandle);
-											}
-										else {
-
-										PIN_LCD();
-										xSemaphoreTake(PIN_tooShortHandle, NULL);
-										i=1;
-										}
-									}
-								}
-    osDelay(1);
-  }
-  /* USER CODE END StartTask02 */
-}
-
-/* USER CODE BEGIN Header_StartTask03 */
-/**
-* @brief Function implementing the zarzadca thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask03 */
-void StartTask03(void const * argument)
-{
-  /* USER CODE BEGIN StartTask03 */
-	uint8_t PIN_mem[4] = {0, 1, 2, 3};
-	uint8_t PIN_read[4];
-//	uint8_t PIN_correct1[20] = "    PIN POPRAWNY    ";
-//	uint8_t PIN_correct2[20] = "                    ";
-//	uint8_t PIN_correct3[20] = "               /    ";
-//	uint8_t PIN_correct4[20] = "              /     ";
-//	uint8_t PIN_correct5[20] = "             /      ";
-//	uint8_t PIN_correct6[20] = "         \\  /       ";
-//	uint8_t PIN_correct7[20] = "          \\/        ";
-	uint8_t correct=0;
-//	uint8_t PIN_wrong1[20] = "   PIN NIEPOPRAWNY  ";
-//	uint8_t PIN_wrong2[20] = "                    ";
-//	uint8_t PIN_wrong3[20] = "       \\    /       ";
-//	uint8_t PIN_wrong4[20] = "        \\  /        ";
-//	uint8_t PIN_wrong5[20] = "         \\/         ";
-//	uint8_t PIN_wrong6[20] = "         /\\         ";
-//	uint8_t PIN_wrong7[20] = "        /  \\        ";
-//	uint8_t PIN_wrong8[20] = "       /    \\       ";
-	uint8_t alarm_cnt=0;
-	uint8_t alarm_cnt_disp[20];
-	uint8_t alarm_disp[20] = "    ALARM!!!!!!     ";
-	uint8_t alarm_disp_cnt =0;
-  /* Infinite loop */
-  for(;;)
-  {
-		if( alarmHandle != NULL )
-						{
-							if( xSemaphoreTake( alarmHandle, NULL ) == pdTRUE ){
-								vTaskSuspend(wyswietlanieHandle);
-								if(!(alarm_disp_cnt&1)){
-									LCD_Clear(Black);
-									LCD_SetBackColor(Black);
-									LCD_SetTextColor(Red);
-									LCD_DisplayStringLine(Line5, alarm_disp);
-								}
-								else {
-									LCD_Clear(Red);
-									LCD_SetBackColor(Red);
-									LCD_SetTextColor(White);
-									LCD_DisplayStringLine(Line5, alarm_disp);
-								}
-								alarm_disp_cnt++;
-								xSemaphoreGive(alarmHandle);
-								vTaskDelay(100);
-							}
-							else if( PIN_tooShortHandle != NULL )
-							{
-								if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
-									xQueueReceive(PINHandle, PIN_read, 0);
-									for(uint8_t i=0; i<4; i++)
-										if(PIN_mem[i] == PIN_read[i]) correct++;
-									if(correct == 4){
-//										LCD_Clear(Green);
-//										LCD_SetBackColor(Green);
-//										LCD_SetTextColor(White);
-//										LCD_DisplayStringLine(Line1, PIN_correct1);
-//										LCD_DisplayStringLine(Line2, PIN_correct2);
-//										LCD_DisplayStringLine(Line3, PIN_correct3);
-//										LCD_DisplayStringLine(Line4, PIN_correct4);
-//										LCD_DisplayStringLine(Line5, PIN_correct5);
-//										LCD_DisplayStringLine(Line6, PIN_correct6);
-//										LCD_DisplayStringLine(Line7, PIN_correct7);
-										Correct_LCD();
-										xSemaphoreGive(PIN_correctHandle);
-										correct=0;
-										alarm_cnt=0;
-										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
-										Def_LCD();
-								}
-									else{
-//										LCD_Clear(Red);
-//										LCD_SetBackColor(Red);
-//										LCD_SetTextColor(White);
-//										LCD_DisplayStringLine(Line1, PIN_wrong1);
-//										LCD_DisplayStringLine(Line2, PIN_wrong2);
-//										LCD_DisplayStringLine(Line3, PIN_wrong3);
-//										LCD_DisplayStringLine(Line4, PIN_wrong4);
-//										LCD_DisplayStringLine(Line5, PIN_wrong5);
-//										LCD_DisplayStringLine(Line6, PIN_wrong6);
-//										LCD_DisplayStringLine(Line7, PIN_wrong7);
-//										LCD_DisplayStringLine(Line8, PIN_wrong8);
-										Incorrect_LCD();
-										correct=0;
-										alarm_cnt++;
-										if(alarm_cnt == 3){
-											xSemaphoreGive(alarmHandle);
-											alarm_cnt=0;
-										}else {
-										sprintf(( char*) alarm_cnt_disp, "Pozostalo prob: %d", 3-alarm_cnt);
-										LCD_DisplayStringLine(Line9, alarm_cnt_disp);
-										}
-										vTaskDelay(AccessTime/portTICK_PERIOD_MS);
-										Def_LCD();
-									}
-							}
-							}	
-						}		
-						
-    osDelay(1);
-  }
-  /* USER CODE END StartTask03 */
-}
-
-/* USER CODE BEGIN Header_StartTask04 */
-/**
-* @brief Function implementing the pamiec thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask04 */
-void StartTask04(void const * argument)
-{
-  /* USER CODE BEGIN StartTask04 */
-  /* Infinite loop */
-  for(;;)
-  {
-		if( alarmHandle != NULL )
-						{
-							if( xSemaphoreTake( alarmHandle, NULL ) == pdTRUE ){
-								Buzzer_GPIO_Port->ODR |= (1<<5);
-								xSemaphoreGive(alarmHandle);
-							}
-							else
-								Buzzer_GPIO_Port->ODR &= ~(1<<5);
-						}
-		if( PIN_correctHandle != NULL )
-						{
-							if( xSemaphoreTake( PIN_correctHandle, NULL ) == pdTRUE ){
-								Relay_GPIO_Port->ODR &= ~(1<<4);
-								vTaskDelay(AccessTime/portTICK_PERIOD_MS);
-								Relay_GPIO_Port->ODR |= (1<<4);
-							}
-						}
-    osDelay(1);
-  }
-  /* USER CODE END StartTask04 */
-}
-
-/* USER CODE BEGIN Header_StartTask05 */
-/**
-* @brief Function implementing the peryferia thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask05 */
-void StartTask05(void const * argument)
-{
-  /* USER CODE BEGIN StartTask05 */
-	uint8_t PIN_read[4];
-	uint8_t PIN_serv[4] = {7, 8, 9, 0};
-	uint8_t correct;
-	uint8_t i;
-  /* Infinite loop */
-  for(;;)
-  {
-		if( SERWISHandle != NULL)
-									{
-										if( xSemaphoreTake( SERWISHandle, NULL ) == pdTRUE ){
-											xSemaphoreGive(SERWISHandle);
-											if(!i){
-													vTaskSuspend(zarzadcaHandle);
-													Serwis_Def_LCD();
-													PIN_LCD();
-													vTaskResume(wyswietlanieHandle);
-													i++;
-											}
-											if( PIN_tooShortHandle != NULL )
-											{
-												if( xSemaphoreTake( PIN_tooShortHandle, NULL ) == pdTRUE ){
-													xQueueReceive(PINHandle, PIN_read, 0);
-													for(uint8_t i=0; i<4; i++)
-														if(PIN_serv[i] == PIN_read[i]) correct++;
-													if(correct == 4){
-														Correct_LCD();
-														correct=0;
-														i=0;
-														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
-														Def_LCD();
-														xSemaphoreTake(alarmHandle, NULL);
-														xSemaphoreTake( SERWISHandle, NULL );
-														vTaskResume(zarzadcaHandle);
-											}	else {
-														Incorrect_LCD();
-														correct=0;
-														vTaskDelay(AccessTime/portTICK_PERIOD_MS);
-														Serwis_Def_LCD();
-														PIN_LCD();
-												}
-										}
-									}
-								}
-							}
-    osDelay(1);
-  }
-  /* USER CODE END StartTask05 */
 }
 
 /**

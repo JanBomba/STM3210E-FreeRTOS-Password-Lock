@@ -428,6 +428,26 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>display_command.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\display_command.h</FilePath>
+            </File>
+            <File>
+              <FileName>display_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\display_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\my_tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_tasks.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\my_tasks.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

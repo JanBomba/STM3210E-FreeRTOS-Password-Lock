@@ -49,7 +49,6 @@
 uint8_t znak;
 uint8_t n;
 extern osSemaphoreId znak_licznikHandle;
-extern osSemaphoreId PIN_completedHandle;
 extern osMessageQId PIN_znakHandle;
 extern osSemaphoreId EnterHandle;
 extern osSemaphoreId SERWISHandle;
@@ -231,14 +230,7 @@ void TIM6_IRQHandler(void)
 					znak=0;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)){
 					//SERWIS
@@ -258,40 +250,20 @@ void TIM6_IRQHandler(void)
 					znak=3;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)){
 					znak=2;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)){
 					znak=1;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
+
 				}
 				break;
 				case 2:
@@ -306,40 +278,19 @@ void TIM6_IRQHandler(void)
 					znak=6;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)){
 					znak=5;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)){
 					znak=4;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				break;
 				case 3:
@@ -354,40 +305,19 @@ void TIM6_IRQHandler(void)
 					znak=9;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k3_GPIO_Port, k3_Pin)){
 					znak=8;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				if(!HAL_GPIO_ReadPin(k4_GPIO_Port, k4_Pin)){
 					znak=7;
 					xSemaphoreGiveFromISR( znak_licznikHandle, &xHigherPriorityTaskWoken);
 					n++;
-					if( PIN_completedHandle != NULL )
-						{
-							if( xSemaphoreTakeFromISR( PIN_completedHandle, NULL ) == pdTRUE )
-							{
 								xQueueSendToFrontFromISR( PIN_znakHandle, &znak, NULL);
-								xSemaphoreGiveFromISR(PIN_completedHandle, &xHigherPriorityTaskWoken);
-							}
-				}
 				}
 				break;
 			}
