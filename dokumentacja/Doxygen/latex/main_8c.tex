@@ -1,0 +1,265 @@
+\hypertarget{main_8c}{}\doxysection{Core/\+Src/main.c File Reference}
+\label{main_8c}\index{Core/Src/main.c@{Core/Src/main.c}}
+
+
+\+: Main program body  
+
+
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+os.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lcd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}display\+\_\+command.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}my\+\_\+tasks.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8c_afaf7a011c461893c3146d29f5961b04b}\label{main_8c_afaf7a011c461893c3146d29f5961b04b}} 
+\#define {\bfseries Access\+Time}~3000
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{main_8c_a70af21c671abfcc773614a9a4f63d920}{System\+Clock\+\_\+\+Config}} (void)
+\begin{DoxyCompactList}\small\item\em System Clock Configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a016544463b4842ced7191baf8f449cea}{Start\+Default\+Task}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the default\+Task thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a34627f8f45e5a4326ba0f943904ed176}{Start\+Task02}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the klawiatura\+\_\+debo thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a3bc846951bdaafc7a0b25f75c3cebd68}{Start\+Task03}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the zarzadca thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a39608cc9f730ceaf19e5a362005b9203}{Start\+Task04}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the peryferia thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a6f215832012c119515607e12ff0cbdc3}{Start\+Task05}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the serwis thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{main}} (void)
+\begin{DoxyCompactList}\small\item\em The application entry point. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a1730ffe1e560465665eb47d9264826f9}{Error\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function is executed in case of error occurrence. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8c_a1564492831a79fa18466467c3420c3c3}\label{main_8c_a1564492831a79fa18466467c3420c3c3}} 
+TIM\+\_\+\+Handle\+Type\+Def {\bfseries htim6}
+\item 
+\mbox{\Hypertarget{main_8c_a5402a834dbd8d94ebfa80b1002e8df7b}\label{main_8c_a5402a834dbd8d94ebfa80b1002e8df7b}} 
+SRAM\+\_\+\+Handle\+Type\+Def {\bfseries hsram3}
+\item 
+\mbox{\Hypertarget{main_8c_aa658fe134a5d1309d7a15c8116fa142c}\label{main_8c_aa658fe134a5d1309d7a15c8116fa142c}} 
+os\+Thread\+Id {\bfseries default\+Task\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a6c5c57657f3c00ffb4896f022ef872e5}\label{main_8c_a6c5c57657f3c00ffb4896f022ef872e5}} 
+os\+Thread\+Id {\bfseries wyswietlanie\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_ad2f059777354110b591cc265f33f1ff6}\label{main_8c_ad2f059777354110b591cc265f33f1ff6}} 
+os\+Thread\+Id {\bfseries zarzadca\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_aac2d73682fe002f66200d9f64cb283cb}\label{main_8c_aac2d73682fe002f66200d9f64cb283cb}} 
+os\+Thread\+Id {\bfseries peryferia\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_af19d3538cd0f76e9ade3a4c13b179be4}\label{main_8c_af19d3538cd0f76e9ade3a4c13b179be4}} 
+os\+Thread\+Id {\bfseries serwis\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a1714678faa340ef08e3839567eeaa4d1}\label{main_8c_a1714678faa340ef08e3839567eeaa4d1}} 
+os\+Message\+QId {\bfseries PIN\+\_\+znak\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_ac552989423b7e044a89f7f1e5adfc2dc}\label{main_8c_ac552989423b7e044a89f7f1e5adfc2dc}} 
+os\+Semaphore\+Id {\bfseries znak\+\_\+licznik\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a9ee6f2c33d84eeb67c2bad3da2cd91dc}\label{main_8c_a9ee6f2c33d84eeb67c2bad3da2cd91dc}} 
+os\+Semaphore\+Id {\bfseries Enter\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a80c913687e16d36f2fea176ae5acb9b3}\label{main_8c_a80c913687e16d36f2fea176ae5acb9b3}} 
+os\+Semaphore\+Id {\bfseries SERWISHandle}
+\item 
+\mbox{\Hypertarget{main_8c_a7bdc639cd7ee71aea7ec2249e9832b01}\label{main_8c_a7bdc639cd7ee71aea7ec2249e9832b01}} 
+os\+Semaphore\+Id {\bfseries PIN\+\_\+too\+Short\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a2c1f5d4aa8cd671ac6ea215d69111d6a}\label{main_8c_a2c1f5d4aa8cd671ac6ea215d69111d6a}} 
+os\+Semaphore\+Id {\bfseries alarm\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a7438fe84e8fae514bc0127c31db2df9f}\label{main_8c_a7438fe84e8fae514bc0127c31db2df9f}} 
+os\+Semaphore\+Id {\bfseries PIN\+\_\+correct\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_aaa9033a5e00372e5bc2a120dbd0d1038}\label{main_8c_aaa9033a5e00372e5bc2a120dbd0d1038}} 
+os\+Message\+QId {\bfseries PINHandle}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\+: Main program body 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Copyright (c) 2022 STMicroelectronics. All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-\/\+IS. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_a1730ffe1e560465665eb47d9264826f9}\label{main_8c_a1730ffe1e560465665eb47d9264826f9}} 
+\index{main.c@{main.c}!Error\_Handler@{Error\_Handler}}
+\index{Error\_Handler@{Error\_Handler}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{Error\_Handler()}{Error\_Handler()}}
+{\footnotesize\ttfamily void Error\+\_\+\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function is executed in case of error occurrence. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}\label{main_8c_a840291bc02cba5474a4cb46a9b9566fe}} 
+\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+The application entry point. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em int} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{main_8c_a016544463b4842ced7191baf8f449cea}\label{main_8c_a016544463b4842ced7191baf8f449cea}} 
+\index{main.c@{main.c}!StartDefaultTask@{StartDefaultTask}}
+\index{StartDefaultTask@{StartDefaultTask}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartDefaultTask()}{StartDefaultTask()}}
+{\footnotesize\ttfamily void Start\+Default\+Task (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the default\+Task thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{main_8c_a34627f8f45e5a4326ba0f943904ed176}\label{main_8c_a34627f8f45e5a4326ba0f943904ed176}} 
+\index{main.c@{main.c}!StartTask02@{StartTask02}}
+\index{StartTask02@{StartTask02}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartTask02()}{StartTask02()}}
+{\footnotesize\ttfamily void Start\+Task02 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the klawiatura\+\_\+debo thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task02();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie wyswietlacz
+
+Odpowiedzialne za\+: wyswietlanie gwiazdek na wyswietlaczu w momencie wpisywania pojedynczej cyfry PINU odbiera dane z przerwania, magazynuje w buforze i wysyla do zarzadcy podlicza ilosc wpisanych cyfr sprawdza dlugosc hasla \mbox{\Hypertarget{main_8c_a3bc846951bdaafc7a0b25f75c3cebd68}\label{main_8c_a3bc846951bdaafc7a0b25f75c3cebd68}} 
+\index{main.c@{main.c}!StartTask03@{StartTask03}}
+\index{StartTask03@{StartTask03}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartTask03()}{StartTask03()}}
+{\footnotesize\ttfamily void Start\+Task03 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the zarzadca thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task03();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie zarzadca \mbox{\Hypertarget{main_8c_a39608cc9f730ceaf19e5a362005b9203}\label{main_8c_a39608cc9f730ceaf19e5a362005b9203}} 
+\index{main.c@{main.c}!StartTask04@{StartTask04}}
+\index{StartTask04@{StartTask04}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartTask04()}{StartTask04()}}
+{\footnotesize\ttfamily void Start\+Task04 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the peryferia thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task04();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie peryferia \mbox{\Hypertarget{main_8c_a6f215832012c119515607e12ff0cbdc3}\label{main_8c_a6f215832012c119515607e12ff0cbdc3}} 
+\index{main.c@{main.c}!StartTask05@{StartTask05}}
+\index{StartTask05@{StartTask05}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartTask05()}{StartTask05()}}
+{\footnotesize\ttfamily void Start\+Task05 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the serwis thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task05();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie serwis \mbox{\Hypertarget{main_8c_a70af21c671abfcc773614a9a4f63d920}\label{main_8c_a70af21c671abfcc773614a9a4f63d920}} 
+\index{main.c@{main.c}!SystemClock\_Config@{SystemClock\_Config}}
+\index{SystemClock\_Config@{SystemClock\_Config}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{SystemClock\_Config()}{SystemClock\_Config()}}
+{\footnotesize\ttfamily void System\+Clock\+\_\+\+Config (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+System Clock Configuration. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+Initializes the RCC Oscillators according to the specified parameters in the RCC\+\_\+\+Osc\+Init\+Type\+Def structure.
+
+Initializes the CPU, AHB and APB buses clocks

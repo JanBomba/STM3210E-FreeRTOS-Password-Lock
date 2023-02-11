@@ -1,3 +1,6 @@
+/**@file lcd.h  
+*/
+
 // Modified to HAL libraries by Jan Bomba April 2021
 /******************** (C) COPYRIGHT 2008 STMicroelectronics ********************
 * File Name          : lcd.h

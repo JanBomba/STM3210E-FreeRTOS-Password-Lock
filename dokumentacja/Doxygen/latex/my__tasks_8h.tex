@@ -1,0 +1,130 @@
+\hypertarget{my__tasks_8h}{}\doxysection{Core/\+Inc/my\+\_\+tasks.h File Reference}
+\label{my__tasks_8h}\index{Core/Inc/my\_tasks.h@{Core/Inc/my\_tasks.h}}
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+os.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lcd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}display\+\_\+command.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{my__tasks_8h_afaf7a011c461893c3146d29f5961b04b}\label{my__tasks_8h_afaf7a011c461893c3146d29f5961b04b}} 
+\#define {\bfseries Access\+Time}~3000
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{my__tasks_8h_a34627f8f45e5a4326ba0f943904ed176}{Start\+Task02}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the klawiatura\+\_\+debo thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{my__tasks_8h_a3bc846951bdaafc7a0b25f75c3cebd68}{Start\+Task03}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the zarzadca thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{my__tasks_8h_a39608cc9f730ceaf19e5a362005b9203}{Start\+Task04}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the peryferia thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{my__tasks_8h_a6f215832012c119515607e12ff0cbdc3}{Start\+Task05}} (void const $\ast$argument)
+\begin{DoxyCompactList}\small\item\em Function implementing the serwis thread. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+~\newline
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{my__tasks_8h_a34627f8f45e5a4326ba0f943904ed176}\label{my__tasks_8h_a34627f8f45e5a4326ba0f943904ed176}} 
+\index{my\_tasks.h@{my\_tasks.h}!StartTask02@{StartTask02}}
+\index{StartTask02@{StartTask02}!my\_tasks.h@{my\_tasks.h}}
+\doxysubsubsection{\texorpdfstring{StartTask02()}{StartTask02()}}
+{\footnotesize\ttfamily void Start\+Task02 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the klawiatura\+\_\+debo thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task02();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie wyswietlacz
+
+Odpowiedzialne za\+: wyswietlanie gwiazdek na wyswietlaczu w momencie wpisywania pojedynczej cyfry PINU odbiera dane z przerwania, magazynuje w buforze i wysyla do zarzadcy podlicza ilosc wpisanych cyfr sprawdza dlugosc hasla \mbox{\Hypertarget{my__tasks_8h_a3bc846951bdaafc7a0b25f75c3cebd68}\label{my__tasks_8h_a3bc846951bdaafc7a0b25f75c3cebd68}} 
+\index{my\_tasks.h@{my\_tasks.h}!StartTask03@{StartTask03}}
+\index{StartTask03@{StartTask03}!my\_tasks.h@{my\_tasks.h}}
+\doxysubsubsection{\texorpdfstring{StartTask03()}{StartTask03()}}
+{\footnotesize\ttfamily void Start\+Task03 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the zarzadca thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task03();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie zarzadca \mbox{\Hypertarget{my__tasks_8h_a39608cc9f730ceaf19e5a362005b9203}\label{my__tasks_8h_a39608cc9f730ceaf19e5a362005b9203}} 
+\index{my\_tasks.h@{my\_tasks.h}!StartTask04@{StartTask04}}
+\index{StartTask04@{StartTask04}!my\_tasks.h@{my\_tasks.h}}
+\doxysubsubsection{\texorpdfstring{StartTask04()}{StartTask04()}}
+{\footnotesize\ttfamily void Start\+Task04 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the peryferia thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task04();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie peryferia \mbox{\Hypertarget{my__tasks_8h_a6f215832012c119515607e12ff0cbdc3}\label{my__tasks_8h_a6f215832012c119515607e12ff0cbdc3}} 
+\index{my\_tasks.h@{my\_tasks.h}!StartTask05@{StartTask05}}
+\index{StartTask05@{StartTask05}!my\_tasks.h@{my\_tasks.h}}
+\doxysubsubsection{\texorpdfstring{StartTask05()}{StartTask05()}}
+{\footnotesize\ttfamily void Start\+Task05 (\begin{DoxyParamCaption}\item[{void const $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+Function implementing the serwis thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & 
+\begin{DoxyPre}
+*void Start Task05();
+*\end{DoxyPre}
+\\
+\hline
+\end{DoxyRetVals}
+Zadanie serwis 

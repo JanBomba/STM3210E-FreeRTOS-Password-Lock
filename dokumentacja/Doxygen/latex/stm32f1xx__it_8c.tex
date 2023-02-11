@@ -1,0 +1,79 @@
+\hypertarget{stm32f1xx__it_8c}{}\doxysection{Core/\+Src/stm32f1xx\+\_\+it.c File Reference}
+\label{stm32f1xx__it_8c}\index{Core/Src/stm32f1xx\_it.c@{Core/Src/stm32f1xx\_it.c}}
+
+
+Interrupt Service Routines.  
+
+
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f1xx\+\_\+it.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Free\+RTOS.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}task.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lcd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+os.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}\label{stm32f1xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}} 
+void {\bfseries NMI\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Non maskable interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}\label{stm32f1xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}} 
+void {\bfseries Hard\+Fault\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Hard fault interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a3150f74512510287a942624aa9b44cc5}\label{stm32f1xx__it_8c_a3150f74512510287a942624aa9b44cc5}} 
+void {\bfseries Mem\+Manage\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Memory management fault. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}\label{stm32f1xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}} 
+void {\bfseries Bus\+Fault\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Prefetch fault, memory access fault. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}\label{stm32f1xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}} 
+void {\bfseries Usage\+Fault\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Undefined instruction or illegal state. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}\label{stm32f1xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}} 
+void {\bfseries Debug\+Mon\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Debug monitor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_ab5e09814056d617c521549e542639b7e}\label{stm32f1xx__it_8c_ab5e09814056d617c521549e542639b7e}} 
+void {\bfseries Sys\+Tick\+\_\+\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles System tick timer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a0453d4621224d4aed7b6f727f12657b2}\label{stm32f1xx__it_8c_a0453d4621224d4aed7b6f727f12657b2}} 
+void {\bfseries TIM6\+\_\+\+IRQHandler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles TIM6 global interrupt. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_acf8865da0ae224737b896aca717894e4}\label{stm32f1xx__it_8c_acf8865da0ae224737b896aca717894e4}} 
+uint8\+\_\+t {\bfseries znak}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a5a648f5ec00c526b0dfa2df7a272c6c0}\label{stm32f1xx__it_8c_a5a648f5ec00c526b0dfa2df7a272c6c0}} 
+uint8\+\_\+t {\bfseries n}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_ac552989423b7e044a89f7f1e5adfc2dc}\label{stm32f1xx__it_8c_ac552989423b7e044a89f7f1e5adfc2dc}} 
+os\+Semaphore\+Id {\bfseries znak\+\_\+licznik\+Handle}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a1714678faa340ef08e3839567eeaa4d1}\label{stm32f1xx__it_8c_a1714678faa340ef08e3839567eeaa4d1}} 
+os\+Message\+QId {\bfseries PIN\+\_\+znak\+Handle}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a9ee6f2c33d84eeb67c2bad3da2cd91dc}\label{stm32f1xx__it_8c_a9ee6f2c33d84eeb67c2bad3da2cd91dc}} 
+os\+Semaphore\+Id {\bfseries Enter\+Handle}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a80c913687e16d36f2fea176ae5acb9b3}\label{stm32f1xx__it_8c_a80c913687e16d36f2fea176ae5acb9b3}} 
+os\+Semaphore\+Id {\bfseries SERWISHandle}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a2c1f5d4aa8cd671ac6ea215d69111d6a}\label{stm32f1xx__it_8c_a2c1f5d4aa8cd671ac6ea215d69111d6a}} 
+os\+Semaphore\+Id {\bfseries alarm\+Handle}
+\item 
+\mbox{\Hypertarget{stm32f1xx__it_8c_a1564492831a79fa18466467c3420c3c3}\label{stm32f1xx__it_8c_a1564492831a79fa18466467c3420c3c3}} 
+TIM\+\_\+\+Handle\+Type\+Def {\bfseries htim6}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interrupt Service Routines. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Copyright (c) 2022 STMicroelectronics. All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-\/\+IS. 

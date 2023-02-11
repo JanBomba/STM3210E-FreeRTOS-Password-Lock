@@ -22,7 +22,25 @@
 #define pin_disp "PIN: "
 
 #define serwis_disp "Podaj PIN serwisowy"
-
+/**
+*<pre>
+*void Def_LCD();
+*</pre>
+*
+*\brief Funkcja sluzaca do wyswietlania defaultowej konfigurajci wyswietlacza LCD
+*
+*
+*Funkcja korzysta z funkcji udostepnionych w bibliotece obslugi wyswietlacza (lcd.h) 
+*LCD_Clear() usuwa cala wyswietlona zawartosc; wpisana w () nazwa koloru ustawia tlo LCD po wykasowaniu
+*LCD_SetBackColor() okresla kolor tla wyswietlanego okna na wyswietlaczu. 
+*LCD_SetTextColor() definiuje kolor uzytego tekstu, ktory bedzie wyswietlany
+*LCD_DisplayStringLine(<line>, <tresc>) funkcja okreslajaca linie <line> w ktorej ma zostac wyswietlony tekst <tresc> w formacie uint8_t
+*
+*Funkcja jest o tyle wazna, poniewaz przechodzac z taska do taska, (w ktorych niektore ustawiaja wyswietlacz) nalezy poczatkowo wrocic do podstawowego ustawienia wyswietlacza
+*w celu dobrego wizualnego odbioru przez uzytkownika
+*
+*
+*/
 void Def_LCD () {
 	LCD_Clear(Black);
 	LCD_SetBackColor(Black);
@@ -31,10 +49,26 @@ void Def_LCD () {
 	LCD_DisplayStringLine(Line5, (uint8_t*)pin_disp);
 }
 
+/**
+*<pre>
+*void Pin_LCD();
+*</pre>
+*
+*\brief Funkcja sluzaca do wyswietlania okna wpisania Pinu uzytkownika
+*
+*
+*Funkcja korzysta z funkcji udostepnionych w bibliotece obslugi wyswietlacza (lcd.h) 
+*LCD_ClearLine() usuwa cala wyswietlona zawartosc; wpisana w () nazwa koloru ustawia tlo LCD po wykasowaniu
+*LCD_DisplayStringLine(<line>, <tresc>) funkcja okreslajaca linie <line> w ktorej ma zostac wyswietlony tekst <tresc> w formacie uint8_t
+*
+*Funkcja jest uzywana bezposrednio w tasku "wyswietlacz" i "serwis" do ukazaniua uzytkownikowi odpowiedniego okna
+*/
+
 void PIN_LCD () {
 	LCD_ClearLine(Line5);
 	LCD_DisplayStringLine(Line5, (uint8_t*)pin_disp);
 }
+
 
 void Correct_LCD (){
 	LCD_Clear(Green);
@@ -48,6 +82,7 @@ void Correct_LCD (){
 	LCD_DisplayStringLine(Line6, (uint8_t*)PIN_correct6);
 	LCD_DisplayStringLine(Line7, (uint8_t*)PIN_correct7);
 }
+
 
 void Incorrect_LCD (){
 	LCD_Clear(Red);

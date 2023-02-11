@@ -1,3 +1,6 @@
+/**@file fonts.h  
+*/
+
 /******************** (C) COPYRIGHT 2007 STMicroelectronics ********************
 * File Name          : fonts.h
 * Author             : MCD Application Team

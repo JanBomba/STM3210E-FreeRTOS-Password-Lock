@@ -1,0 +1,64 @@
+\hypertarget{display__command_8h}{}\doxysection{Core/\+Inc/display\+\_\+command.h File Reference}
+\label{display__command_8h}\index{Core/Inc/display\_command.h@{Core/Inc/display\_command.h}}
+{\ttfamily \#include \char`\"{}lcd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f1xx\+\_\+hal.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{display__command_8h_ad6dd05736263a52f37dac0903e1dcefa}{Def\+\_\+\+LCD}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja sluzaca do wyswietlania defaultowej konfigurajci wyswietlacza LCD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{display__command_8h_a6148f8d5ab553719914faf2fddcafa48}{PIN\+\_\+\+LCD}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja sluzaca do wyswietlania okna wpisania Pinu uzytkownika. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{display__command_8h_a304ed8df39395e528809ecb6d49dd42c}\label{display__command_8h_a304ed8df39395e528809ecb6d49dd42c}} 
+void {\bfseries Correct\+\_\+\+LCD} (void)
+\item 
+\mbox{\Hypertarget{display__command_8h_a01df5ce7e5bfe01e3fd03ae42ba0092d}\label{display__command_8h_a01df5ce7e5bfe01e3fd03ae42ba0092d}} 
+void {\bfseries Incorrect\+\_\+\+LCD} (void)
+\item 
+\mbox{\Hypertarget{display__command_8h_a2783dc1adbd30adbe401dcd06696fb60}\label{display__command_8h_a2783dc1adbd30adbe401dcd06696fb60}} 
+void {\bfseries Serwis\+\_\+\+Def\+\_\+\+LCD} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+~\newline
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{display__command_8h_ad6dd05736263a52f37dac0903e1dcefa}\label{display__command_8h_ad6dd05736263a52f37dac0903e1dcefa}} 
+\index{display\_command.h@{display\_command.h}!Def\_LCD@{Def\_LCD}}
+\index{Def\_LCD@{Def\_LCD}!display\_command.h@{display\_command.h}}
+\doxysubsubsection{\texorpdfstring{Def\_LCD()}{Def\_LCD()}}
+{\footnotesize\ttfamily void Def\+\_\+\+LCD (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sluzaca do wyswietlania defaultowej konfigurajci wyswietlacza LCD. 
+
+
+\begin{DoxyPre}
+*void Def\_LCD();
+*\end{DoxyPre}
+
+
+Funkcja korzysta z funkcji udostepnionych w bibliotece obslugi wyswietlacza (\mbox{\hyperlink{lcd_8h}{lcd.\+h}}) LCD\+\_\+\+Clear() usuwa cala wyswietlona zawartosc; wpisana w () nazwa koloru ustawia tlo LCD po wykasowaniu LCD\+\_\+\+Set\+Back\+Color() okresla kolor tla wyswietlanego okna na wyswietlaczu. LCD\+\_\+\+Set\+Text\+Color() definiuje kolor uzytego tekstu, ktory bedzie wyswietlany LCD\+\_\+\+Display\+String\+Line($<$line$>$, $<$tresc$>$) funkcja okreslajaca linie $<$line$>$ w ktorej ma zostac wyswietlony tekst $<$tresc$>$ w formacie uint8\+\_\+t
+
+Funkcja jest o tyle wazna, poniewaz przechodzac z taska do taska, (w ktorych niektore ustawiaja wyswietlacz) nalezy poczatkowo wrocic do podstawowego ustawienia wyswietlacza w celu dobrego wizualnego odbioru przez uzytkownika \mbox{\Hypertarget{display__command_8h_a6148f8d5ab553719914faf2fddcafa48}\label{display__command_8h_a6148f8d5ab553719914faf2fddcafa48}} 
+\index{display\_command.h@{display\_command.h}!PIN\_LCD@{PIN\_LCD}}
+\index{PIN\_LCD@{PIN\_LCD}!display\_command.h@{display\_command.h}}
+\doxysubsubsection{\texorpdfstring{PIN\_LCD()}{PIN\_LCD()}}
+{\footnotesize\ttfamily void PIN\+\_\+\+LCD (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sluzaca do wyswietlania okna wpisania Pinu uzytkownika. 
+
+
+\begin{DoxyPre}
+*void Pin\_LCD();
+*\end{DoxyPre}
+
+
+Funkcja korzysta z funkcji udostepnionych w bibliotece obslugi wyswietlacza (\mbox{\hyperlink{lcd_8h}{lcd.\+h}}) LCD\+\_\+\+Clear\+Line() usuwa cala wyswietlona zawartosc; wpisana w () nazwa koloru ustawia tlo LCD po wykasowaniu LCD\+\_\+\+Display\+String\+Line($<$line$>$, $<$tresc$>$) funkcja okreslajaca linie $<$line$>$ w ktorej ma zostac wyswietlony tekst $<$tresc$>$ w formacie uint8\+\_\+t
+
+Funkcja jest uzywana bezposrednio w tasku \char`\"{}wyswietlacz\char`\"{} i \char`\"{}serwis\char`\"{} do ukazaniua uzytkownikowi odpowiedniego okna 

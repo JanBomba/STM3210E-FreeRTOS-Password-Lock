@@ -23,6 +23,20 @@ extern osMessageQId PINHandle;
 * @retval None
 */
 /* USER CODE END Header_StartTask02 */
+
+/**
+*<pre>
+*void Start Task02();
+*</pre>
+*
+*\brief Zadanie wyswietlacz
+*
+*Odpowiedzialne za:
+*wyswietlanie gwiazdek na wyswietlaczu w momencie wpisywania pojedynczej cyfry PINU
+*odbiera dane z przerwania, magazynuje w buforze i wysyla do zarzadcy
+*podlicza ilosc wpisanych cyfr
+*sprawdza dlugosc hasla
+*/
 void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
@@ -71,6 +85,14 @@ for(;;)
 * @retval None
 */
 /* USER CODE END Header_StartTask03 */
+/**
+*<pre>
+*void Start Task03();
+*</pre>
+*
+*\brief Zadanie zarzadca
+*
+*/
 void StartTask03(void const * argument)
 {
   /* USER CODE BEGIN StartTask03 */
@@ -146,16 +168,25 @@ void StartTask03(void const * argument)
 
 /* USER CODE BEGIN Header_StartTask04 */
 /**
-* @brief Function implementing the pamiec thread.
+* @brief Function implementing the peryferia thread.
 * @param argument: Not used
 * @retval None
 */
 /* USER CODE END Header_StartTask04 */
+/**
+*<pre>
+*void Start Task04();
+*</pre>
+*
+*\brief Zadanie peryferia
+*
+*/
 void StartTask04(void const * argument)
 {
   /* USER CODE BEGIN StartTask04 */
   /* Infinite loop */
-  for(;;)
+
+	for(;;)
   {
 		if( alarmHandle != NULL )
 						{
@@ -181,11 +212,20 @@ void StartTask04(void const * argument)
 
 /* USER CODE BEGIN Header_StartTask05 */
 /**
-* @brief Function implementing the peryferia thread.
+* @brief Function implementing the serwis thread.
 * @param argument: Not used
 * @retval None
 */
 /* USER CODE END Header_StartTask05 */
+/**
+*<pre>
+*void Start Task05();
+*</pre>
+*
+*\brief Zadanie serwis
+*
+*/
+
 void StartTask05(void const * argument)
 {
   /* USER CODE BEGIN StartTask05 */

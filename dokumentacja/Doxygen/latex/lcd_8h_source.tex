@@ -1,0 +1,216 @@
+\hypertarget{lcd_8h_source}{}\doxysection{lcd.\+h}
+\label{lcd_8h_source}\index{Core/Inc/lcd.h@{Core/Inc/lcd.h}}
+\mbox{\hyperlink{lcd_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Modified\ to\ HAL\ libraries\ by\ Jan\ Bomba\ April\ 2021}}
+\DoxyCodeLine{00005\ \textcolor{comment}{/********************\ (C)\ COPYRIGHT\ 2008\ STMicroelectronics\ ********************}}
+\DoxyCodeLine{00006\ \textcolor{comment}{*\ File\ Name\ \ \ \ \ \ \ \ \ \ :\ lcd.h}}
+\DoxyCodeLine{00007\ \textcolor{comment}{*\ Author\ \ \ \ \ \ \ \ \ \ \ \ \ :\ MCD\ Application\ Team}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*\ Version\ \ \ \ \ \ \ \ \ \ \ \ :\ V1.1.1}}
+\DoxyCodeLine{00009\ \textcolor{comment}{*\ Date\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ 06/13/2008}}
+\DoxyCodeLine{00010\ \textcolor{comment}{*\ Description\ \ \ \ \ \ \ \ :\ This\ file\ contains\ all\ the\ functions\ prototypes\ for\ the}}
+\DoxyCodeLine{00011\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lcd\ firmware\ driver.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{********************************************************************************}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*\ THE\ PRESENT\ FIRMWARE\ WHICH\ IS\ FOR\ GUIDANCE\ ONLY\ AIMS\ AT\ PROVIDING\ CUSTOMERS}}
+\DoxyCodeLine{00014\ \textcolor{comment}{*\ WITH\ CODING\ INFORMATION\ REGARDING\ THEIR\ PRODUCTS\ IN\ ORDER\ FOR\ THEM\ TO\ SAVE\ TIME.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{*\ AS\ A\ RESULT,\ STMICROELECTRONICS\ SHALL\ NOT\ BE\ HELD\ LIABLE\ FOR\ ANY\ DIRECT,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{*\ INDIRECT\ OR\ CONSEQUENTIAL\ DAMAGES\ WITH\ RESPECT\ TO\ ANY\ CLAIMS\ ARISING\ FROM\ THE}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*\ CONTENT\ OF\ SUCH\ FIRMWARE\ AND/OR\ THE\ USE\ MADE\ BY\ CUSTOMERS\ OF\ THE\ CODING}}
+\DoxyCodeLine{00018\ \textcolor{comment}{*\ INFORMATION\ CONTAINED\ HEREIN\ IN\ CONNECTION\ WITH\ THEIR\ PRODUCTS.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*******************************************************************************/}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ Define\ to\ prevent\ recursive\ inclusion\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ \_\_LCD\_H}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ \_\_LCD\_H}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{/*\ Includes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\#include\ "{}stm32f10x\_lib.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*\ Exported\ types\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ Exported\ constants\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ LCD\ Registers\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ R0\ \ \ \ \ \ \ \ \ \ \ \ \ 0x00}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ R1\ \ \ \ \ \ \ \ \ \ \ \ \ 0x01}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ R2\ \ \ \ \ \ \ \ \ \ \ \ \ 0x02}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ R3\ \ \ \ \ \ \ \ \ \ \ \ \ 0x03}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ R4\ \ \ \ \ \ \ \ \ \ \ \ \ 0x04}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ R5\ \ \ \ \ \ \ \ \ \ \ \ \ 0x05}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ R6\ \ \ \ \ \ \ \ \ \ \ \ \ 0x06}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ R7\ \ \ \ \ \ \ \ \ \ \ \ \ 0x07}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ R8\ \ \ \ \ \ \ \ \ \ \ \ \ 0x08}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ R9\ \ \ \ \ \ \ \ \ \ \ \ \ 0x09}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ R10\ \ \ \ \ \ \ \ \ \ \ \ 0x0A}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ R12\ \ \ \ \ \ \ \ \ \ \ \ 0x0C}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ R13\ \ \ \ \ \ \ \ \ \ \ \ 0x0D}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ R14\ \ \ \ \ \ \ \ \ \ \ \ 0x0E}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ R15\ \ \ \ \ \ \ \ \ \ \ \ 0x0F}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ R16\ \ \ \ \ \ \ \ \ \ \ \ 0x10}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ R17\ \ \ \ \ \ \ \ \ \ \ \ 0x11}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ R18\ \ \ \ \ \ \ \ \ \ \ \ 0x12}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ R19\ \ \ \ \ \ \ \ \ \ \ \ 0x13}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ R20\ \ \ \ \ \ \ \ \ \ \ \ 0x14}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ R21\ \ \ \ \ \ \ \ \ \ \ \ 0x15}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ R22\ \ \ \ \ \ \ \ \ \ \ \ 0x16}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ R23\ \ \ \ \ \ \ \ \ \ \ \ 0x17}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ R24\ \ \ \ \ \ \ \ \ \ \ \ 0x18}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ R25\ \ \ \ \ \ \ \ \ \ \ \ 0x19}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ R26\ \ \ \ \ \ \ \ \ \ \ \ 0x1A}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ R27\ \ \ \ \ \ \ \ \ \ \ \ 0x1B}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ R28\ \ \ \ \ \ \ \ \ \ \ \ 0x1C}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ R29\ \ \ \ \ \ \ \ \ \ \ \ 0x1D}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ R30\ \ \ \ \ \ \ \ \ \ \ \ 0x1E}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ R31\ \ \ \ \ \ \ \ \ \ \ \ 0x1F}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ R32\ \ \ \ \ \ \ \ \ \ \ \ 0x20}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ R33\ \ \ \ \ \ \ \ \ \ \ \ 0x21}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ R34\ \ \ \ \ \ \ \ \ \ \ \ 0x22}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ R36\ \ \ \ \ \ \ \ \ \ \ \ 0x24}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ R37\ \ \ \ \ \ \ \ \ \ \ \ 0x25}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ R40\ \ \ \ \ \ \ \ \ \ \ \ 0x28}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ R41\ \ \ \ \ \ \ \ \ \ \ \ 0x29}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ R43\ \ \ \ \ \ \ \ \ \ \ \ 0x2B}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ R45\ \ \ \ \ \ \ \ \ \ \ \ 0x2D}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ R48\ \ \ \ \ \ \ \ \ \ \ \ 0x30}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ R49\ \ \ \ \ \ \ \ \ \ \ \ 0x31}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ R50\ \ \ \ \ \ \ \ \ \ \ \ 0x32}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ R51\ \ \ \ \ \ \ \ \ \ \ \ 0x33}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ R52\ \ \ \ \ \ \ \ \ \ \ \ 0x34}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ R53\ \ \ \ \ \ \ \ \ \ \ \ 0x35}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ R54\ \ \ \ \ \ \ \ \ \ \ \ 0x36}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ R55\ \ \ \ \ \ \ \ \ \ \ \ 0x37}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ R56\ \ \ \ \ \ \ \ \ \ \ \ 0x38}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ R57\ \ \ \ \ \ \ \ \ \ \ \ 0x39}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ R59\ \ \ \ \ \ \ \ \ \ \ \ 0x3B}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ R60\ \ \ \ \ \ \ \ \ \ \ \ 0x3C}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ R61\ \ \ \ \ \ \ \ \ \ \ \ 0x3D}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ R62\ \ \ \ \ \ \ \ \ \ \ \ 0x3E}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ R63\ \ \ \ \ \ \ \ \ \ \ \ 0x3F}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ R64\ \ \ \ \ \ \ \ \ \ \ \ 0x40}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ R65\ \ \ \ \ \ \ \ \ \ \ \ 0x41}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ R66\ \ \ \ \ \ \ \ \ \ \ \ 0x42}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ R67\ \ \ \ \ \ \ \ \ \ \ \ 0x43}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ R68\ \ \ \ \ \ \ \ \ \ \ \ 0x44}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ R69\ \ \ \ \ \ \ \ \ \ \ \ 0x45}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ R70\ \ \ \ \ \ \ \ \ \ \ \ 0x46}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ R71\ \ \ \ \ \ \ \ \ \ \ \ 0x47}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ R72\ \ \ \ \ \ \ \ \ \ \ \ 0x48}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ R73\ \ \ \ \ \ \ \ \ \ \ \ 0x49}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ R74\ \ \ \ \ \ \ \ \ \ \ \ 0x4A}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ R75\ \ \ \ \ \ \ \ \ \ \ \ 0x4B}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ R76\ \ \ \ \ \ \ \ \ \ \ \ 0x4C}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ R77\ \ \ \ \ \ \ \ \ \ \ \ 0x4D}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ R78\ \ \ \ \ \ \ \ \ \ \ \ 0x4E}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ R79\ \ \ \ \ \ \ \ \ \ \ \ 0x4F}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ R80\ \ \ \ \ \ \ \ \ \ \ \ 0x50}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ R81\ \ \ \ \ \ \ \ \ \ \ \ 0x51}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ R82\ \ \ \ \ \ \ \ \ \ \ \ 0x52}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ R83\ \ \ \ \ \ \ \ \ \ \ \ 0x53}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ R96\ \ \ \ \ \ \ \ \ \ \ \ 0x60}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ R97\ \ \ \ \ \ \ \ \ \ \ \ 0x61}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ R106\ \ \ \ \ \ \ \ \ \ \ 0x6A}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ R118\ \ \ \ \ \ \ \ \ \ \ 0x76}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ R128\ \ \ \ \ \ \ \ \ \ \ 0x80}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ R129\ \ \ \ \ \ \ \ \ \ \ 0x81}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ R130\ \ \ \ \ \ \ \ \ \ \ 0x82}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ R131\ \ \ \ \ \ \ \ \ \ \ 0x83}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ R132\ \ \ \ \ \ \ \ \ \ \ 0x84}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ R133\ \ \ \ \ \ \ \ \ \ \ 0x85}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ R134\ \ \ \ \ \ \ \ \ \ \ 0x86}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ R135\ \ \ \ \ \ \ \ \ \ \ 0x87}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ R136\ \ \ \ \ \ \ \ \ \ \ 0x88}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ R137\ \ \ \ \ \ \ \ \ \ \ 0x89}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ R139\ \ \ \ \ \ \ \ \ \ \ 0x8B}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ R140\ \ \ \ \ \ \ \ \ \ \ 0x8C}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ R141\ \ \ \ \ \ \ \ \ \ \ 0x8D}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ R143\ \ \ \ \ \ \ \ \ \ \ 0x8F}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ R144\ \ \ \ \ \ \ \ \ \ \ 0x90}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ R145\ \ \ \ \ \ \ \ \ \ \ 0x91}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ R146\ \ \ \ \ \ \ \ \ \ \ 0x92}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ R147\ \ \ \ \ \ \ \ \ \ \ 0x93}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ R148\ \ \ \ \ \ \ \ \ \ \ 0x94}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ R149\ \ \ \ \ \ \ \ \ \ \ 0x95}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ R150\ \ \ \ \ \ \ \ \ \ \ 0x96}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ R151\ \ \ \ \ \ \ \ \ \ \ 0x97}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ R152\ \ \ \ \ \ \ \ \ \ \ 0x98}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ R153\ \ \ \ \ \ \ \ \ \ \ 0x99}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ R154\ \ \ \ \ \ \ \ \ \ \ 0x9A}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ R157\ \ \ \ \ \ \ \ \ \ \ 0x9D}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ R192\ \ \ \ \ \ \ \ \ \ \ 0xC0}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ R193\ \ \ \ \ \ \ \ \ \ \ 0xC1}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ R227\ \ \ \ \ \ \ \ \ \ \ 0xE3}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ R229\ \ \ \ \ \ \ \ \ \ \ 0xE5}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ R231\ \ \ \ \ \ \ \ \ \ \ 0xE7}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ R239\ \ \ \ \ \ \ \ \ \ \ 0xEF}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{/*\ LCD\ Control\ pins\ */}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ CtrlPin\_NCS\ \ \ \ GPIO\_Pin\_2\ \ \ }\textcolor{comment}{/*\ PB.02\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ CtrlPin\_RS\ \ \ \ \ GPIO\_Pin\_7\ \ \ }\textcolor{comment}{/*\ PD.07\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ CtrlPin\_NWR\ \ \ \ GPIO\_Pin\_15\ \ }\textcolor{comment}{/*\ PD.15\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{comment}{/*\ LCD\ color\ */}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ White\ \ \ \ \ \ \ \ \ \ 0xFFFF}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ Black\ \ \ \ \ \ \ \ \ \ 0x0000}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ Grey\ \ \ \ \ \ \ \ \ \ \ 0xF7DE}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ Blue\ \ \ \ \ \ \ \ \ \ \ 0x001F}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ Blue2\ \ \ \ \ \ \ \ \ \ 0x051F}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ Red\ \ \ \ \ \ \ \ \ \ \ \ 0xF800}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ Magenta\ \ \ \ \ \ \ \ 0xF81F}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ Green\ \ \ \ \ \ \ \ \ \ 0x07E0}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ Cyan\ \ \ \ \ \ \ \ \ \ \ 0x7FFF}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ Yellow\ \ \ \ \ \ \ \ \ 0xFFE0}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ Line0\ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ Line1\ \ \ \ \ \ \ \ \ \ 24}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ Line2\ \ \ \ \ \ \ \ \ \ 48}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ Line3\ \ \ \ \ \ \ \ \ \ 72}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ Line4\ \ \ \ \ \ \ \ \ \ 96}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ Line5\ \ \ \ \ \ \ \ \ \ 120}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ Line6\ \ \ \ \ \ \ \ \ \ 144}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ Line7\ \ \ \ \ \ \ \ \ \ 168}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ Line8\ \ \ \ \ \ \ \ \ \ 192}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ Line9\ \ \ \ \ \ \ \ \ \ 216}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ Horizontal\ \ \ \ \ 0x00}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ Vertical\ \ \ \ \ \ \ 0x01}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{/*\ Exported\ macro\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00175\ \textcolor{comment}{/*\ Exported\ functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00176\ \textcolor{comment}{/*-\/-\/-\/-\/-\/\ High\ layer\ function\ -\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00177\ \textcolor{keywordtype}{void}\ STM3210E\_LCD\_Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00178\ \textcolor{keywordtype}{void}\ LCD\_SetTextColor(\textcolor{keyword}{volatile}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Color);}
+\DoxyCodeLine{00179\ \textcolor{keywordtype}{void}\ LCD\_SetBackColor(\textcolor{keyword}{volatile}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Color);}
+\DoxyCodeLine{00180\ \textcolor{keywordtype}{void}\ LCD\_ClearLine(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Line);}
+\DoxyCodeLine{00181\ \textcolor{keywordtype}{void}\ LCD\_Clear(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Color);}
+\DoxyCodeLine{00182\ \textcolor{keywordtype}{void}\ LCD\_SetCursor(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos);}
+\DoxyCodeLine{00183\ \textcolor{keywordtype}{void}\ LCD\_DrawChar(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keyword}{const}\ *c);}
+\DoxyCodeLine{00184\ \textcolor{keywordtype}{void}\ LCD\_DisplayChar(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Line,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Column,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Ascii);}
+\DoxyCodeLine{00185\ \textcolor{keywordtype}{void}\ LCD\_DisplayStringLine(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Line,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *ptr);}
+\DoxyCodeLine{00186\ \textcolor{keywordtype}{void}\ LCD\_SetDisplayWindow(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Height,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Width);}
+\DoxyCodeLine{00187\ \textcolor{keywordtype}{void}\ LCD\_WindowModeDisable(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00188\ \textcolor{keywordtype}{void}\ LCD\_DrawLine(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Length,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Direction);}
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{void}\ LCD\_DrawRect(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Height,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Width);}
+\DoxyCodeLine{00190\ \textcolor{keywordtype}{void}\ LCD\_DrawCircle(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ Xpos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Ypos,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ Radius);}
+\DoxyCodeLine{00191\ \textcolor{keywordtype}{void}\ LCD\_DrawMonoPict(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \ \textcolor{keyword}{const}\ *Pict);}
+\DoxyCodeLine{00192\ \textcolor{keywordtype}{void}\ LCD\_WriteBMP(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ BmpAddress);}
+\DoxyCodeLine{00193\ \textcolor{keywordtype}{void}\ LCD\_DrawBMP(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ BmpAddress);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{comment}{/*-\/-\/-\/-\/-\/\ Medium\ layer\ function\ -\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00196\ \textcolor{keywordtype}{void}\ LCD\_WriteReg(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ LCD\_Reg,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ LCD\_RegValue);}
+\DoxyCodeLine{00197\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ LCD\_ReadReg(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ LCD\_Reg);}
+\DoxyCodeLine{00198\ \textcolor{keywordtype}{void}\ LCD\_WriteRAM\_Prepare(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00199\ \textcolor{keywordtype}{void}\ LCD\_WriteRAM(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ RGB\_Code);}
+\DoxyCodeLine{00200\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ LCD\_ReadRAM(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00201\ \textcolor{keywordtype}{void}\ LCD\_PowerOn(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00202\ \textcolor{keywordtype}{void}\ LCD\_DisplayOn(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00203\ \textcolor{keywordtype}{void}\ LCD\_DisplayOff(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{comment}{/*-\/-\/-\/-\/-\/\ Low\ layer\ function\ -\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00206\ \textcolor{comment}{//Now\ coming\ form\ CubeMX}}
+\DoxyCodeLine{00207\ \textcolor{comment}{//void\ LCD\_CtrlLinesConfig(void);}}
+\DoxyCodeLine{00208\ \textcolor{comment}{//void\ LCD\_FSMCConfig(void);}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_LCD\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{comment}{/*******************\ (C)\ COPYRIGHT\ 2008\ STMicroelectronics\ *****END\ OF\ FILE****/}}
+
+\end{DoxyCode}

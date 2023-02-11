@@ -1,3 +1,6 @@
+/**@file FreeRTOSConfig.h  
+*/
+
 /* USER CODE BEGIN Header */
 /*
  * FreeRTOS Kernel V10.0.1
